@@ -1194,16 +1194,16 @@
                 <!-- ===== Sound Overlay ===== -->
                 <div id="soundOverlay">
                     <div class="sound-icon">🔊</div>
-                    <div class="sound-text">👆 Tap anywhere to enable sound</div>
+                    <div class="sound-text">👆 Tap to enable sound</div>
                 </div>
 
-                <!-- ===== Custom Player Loader Overlay ===== -->
+                <!-- ===== Player Loader ===== -->
                 <div class="player-loader" id="playerLoader">
                     <div class="player-spinner"></div>
-                    <div class="player-loader-text">Channel Loading...</div>
+                    <div class="player-loader-text">Loading...</div>
                 </div>
 
-                <!-- ===== Custom Video Controls ===== -->
+                <!-- ===== Video Controls ===== -->
                 <div class="video-controls">
                     <div class="controls-row">
                         <button class="ctrl-btn play-btn" id="playPauseBtn">▶</button>
@@ -1388,7 +1388,7 @@
     (function() {
         'use strict';
 
-        // ===== Domain Protection =====
+        // ===== Domain Protection (optional - allow multiple) =====
         const allowedDomains = [
             'savidyatv.blogspot.com',
             'www.savidyatv.blogspot.com',
@@ -1397,8 +1397,6 @@
             '127.0.0.1'
         ];
         const currentHost = window.location.hostname;
-        
-        // Allow if in allowed list OR if running locally
         const isAllowed = allowedDomains.some(d => currentHost === d || currentHost.endsWith('.' + d)) ||
                          currentHost === 'localhost' || currentHost === '127.0.0.1' ||
                          currentHost.startsWith('192.168.') || currentHost.startsWith('10.') ||
@@ -1499,19 +1497,22 @@
             showToast('🔊 Sound enabled', '🔊');
         }
 
-        // ===== Global Tap to enable sound =====
-        document.addEventListener('click', function() {
-            if (!soundEnabled && video.src) {
+        // ===== Global Tap to enable sound (only if overlay is visible) =====
+        document.addEventListener('click', function(e) {
+            // If overlay is active and not yet enabled, enable sound
+            if (soundOverlay.classList.contains('active') && !soundEnabled) {
                 enableSound();
             }
-        }, false);
+        });
 
-        document.addEventListener('touchstart', function() {
-            if (!soundEnabled && video.src) {
+        // Also on touch
+        document.addEventListener('touchstart', function(e) {
+            if (soundOverlay.classList.contains('active') && !soundEnabled) {
                 enableSound();
             }
         }, { passive: true });
 
+        // Sound overlay click
         soundOverlay.onclick = function(e) {
             e.stopPropagation();
             enableSound();
@@ -1600,7 +1601,9 @@
 
         playPauseBtn.onclick = () => {
             if (video.paused) {
+                // Try to play with sound
                 if (!soundEnabled) enableSound();
+                video.muted = false;
                 video.play().catch(() => {});
             } else {
                 video.pause();
@@ -1622,8 +1625,11 @@
         };
         video.onplaying = () => {
             playerLoader.classList.remove('show');
-            if (!soundEnabled) {
+            // If sound not enabled yet, show overlay (but only if muted)
+            if (video.muted && !soundEnabled) {
                 soundOverlay.classList.add('active');
+            } else {
+                soundOverlay.classList.remove('active');
             }
         };
 
@@ -1734,7 +1740,9 @@
             currentChannel = channel;
             retryAttempts = 0;
             hideError();
+            // Reset sound state for new channel
             soundEnabled = false;
+            soundOverlay.classList.remove('active');
 
             document.getElementById('now-playing-name').textContent = channel.name;
             document.getElementById('now-playing-category').textContent = channel.category || 'General';
@@ -1751,11 +1759,39 @@
             video.removeAttribute('src');
             video.load();
 
-            // Start muted so video plays, then show sound overlay
-            video.muted = true;
-            soundOverlay.classList.add('active');
-            soundEnabled = false;
-            muteBtn.textContent = '🔇';
+            // ===== NEW AUTO-SOUND LOGIC =====
+            // First try to play with sound (unmuted)
+            video.muted = false;
+            video.volume = parseFloat(volumeSlider.value) || 0.8;
+            volumeSlider.value = video.volume;
+            muteBtn.textContent = '🔊';
+
+            const attemptPlayWithSound = () => {
+                const playPromise = video.play();
+                if (playPromise) {
+                    playPromise.then(() => {
+                        // Success: sound works, hide overlay
+                        soundOverlay.classList.remove('active');
+                        soundEnabled = true;
+                        setStatus('on', 'LIVE');
+                        showToast('📺 Now playing: ' + channel.name);
+                    }).catch((err) => {
+                        // Autoplay with sound blocked -> fallback to muted + overlay
+                        console.log('Autoplay with sound blocked:', err);
+                        video.muted = true;
+                        muteBtn.textContent = '🔇';
+                        // Play muted
+                        video.play().then(() => {
+                            setStatus('on', 'LIVE');
+                            soundOverlay.classList.add('active');
+                            soundEnabled = false;
+                            showToast('🔇 Tap to enable sound');
+                        }).catch(() => {
+                            setStatus('off', 'TAP TO PLAY');
+                        });
+                    });
+                }
+            };
 
             if (Hls.isSupported()) {
                 hlsPlayer = new Hls({
@@ -1790,23 +1826,7 @@
                     } else {
                         qualitySelect.style.display = 'none';
                     }
-
-                    video.muted = true;
-                    soundOverlay.classList.add('active');
-
-                    video.play()
-                        .then(() => {
-                            setStatus('on', 'LIVE');
-                            showToast('📺 Now playing: ' + channel.name);
-                        })
-                        .catch((err) => {
-                            console.log('Auto-play blocked:', err);
-                            video.play().then(() => {
-                                setStatus('on', 'LIVE');
-                            }).catch(() => {
-                                setStatus('off', 'TAP TO PLAY');
-                            });
-                        });
+                    attemptPlayWithSound();
                 });
 
                 hlsPlayer.on(Hls.Events.ERROR, (_, data) => {
@@ -1843,18 +1863,7 @@
 
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = channel.url;
-                video.muted = true;
-                soundOverlay.classList.add('active');
-                video.play()
-                    .then(() => {
-                        setStatus('on', 'LIVE');
-                        showToast('📺 Now playing: ' + channel.name);
-                    })
-                    .catch(() => {
-                        video.play().then(() => {
-                            setStatus('on', 'LIVE');
-                        });
-                    });
+                attemptPlayWithSound();
             } else {
                 setStatus('off', 'NOT SUPPORTED');
                 showError('HLS not supported in this browser');
