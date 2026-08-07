@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
     <style>
-        /* ===== Clapper Base CSS (Dark/Light compatible) ===== */
+        /* ===== Clapper Base CSS (Light default, Dark optional) ===== */
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f8f9fc;--bg4:#e8ecf1;--text:#1a1a2e;--text2:#555577;--text3:#8888aa;--accent:#6c5ce7;--gradient:linear-gradient(135deg,#6c5ce7,#a29bfe);--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.06);--transition:all .2s cubic-bezier(.4,0,.2,1)}
         body.dark-mode{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--bg4:#222233;--text:#f0f0f5;--text2:#8888aa;--text3:#555577;--shadow:0 4px 24px rgba(0,0,0,.6)}
@@ -67,10 +67,20 @@
         .error-bar{display:none;align-items:center;gap:6px;padding:6px 12px;background:rgba(239,68,68,.08);color:#f87171;font-size:.75rem}
         .error-bar.active{display:flex}
         .error-close{margin-left:auto;background:none;border:none;color:#f87171;cursor:pointer}
-        #soundOverlay{position:absolute;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:20;cursor:pointer}
-        #soundOverlay.active{display:flex}
 
-        /* ===== CAROUSEL & SECTION (from previous design) ===== */
+        /* ===== AUTO SOUND OVERLAY - subtle, tap anywhere ===== */
+        #soundOverlay{
+            position:absolute;inset:0;background:rgba(0,0,0,0.5);
+            display:none;align-items:center;justify-content:center;z-index:20;
+            cursor:pointer;backdrop-filter:blur(4px);
+            flex-direction:column;gap:10px;
+        }
+        #soundOverlay.active{display:flex}
+        #soundOverlay .sound-icon{font-size:3rem;color:#fff;animation:pulse-icon 1.8s ease-in-out infinite}
+        #soundOverlay .sound-text{color:#fff;font-size:.85rem;font-weight:600;background:rgba(0,0,0,.5);padding:8px 24px;border-radius:30px;border:1px solid rgba(255,255,255,.15)}
+        @keyframes pulse-icon{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1}}
+
+        /* ===== CAROUSEL & SECTION ===== */
         .tv-section{margin-top:28px}
         .tv-section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
         .tv-section-title{display:flex;align-items:center;gap:10px}
@@ -149,12 +159,13 @@
     <div class="player-wrapper">
         <div class="player-container" id="playerContainer">
             <video id="player-video" playsinline preload="auto" crossorigin="anonymous" autoplay></video>
+            
+            <!-- AUTO SOUND OVERLAY - Tap anywhere to enable -->
             <div id="soundOverlay">
-                <div style="background:var(--gradient);padding:10px 20px;border-radius:24px;color:#fff;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:8px;cursor:pointer;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                    🔊 Click to Enable Sound
-                </div>
+                <div class="sound-icon">🔊</div>
+                <div class="sound-text">👆 Tap anywhere to enable sound</div>
             </div>
+
             <div class="player-overlay active" id="playerOverlay"><div class="spinner-ring"></div><div class="overlay-text" id="overlayText">Ready</div></div>
             <div class="player-controls">
                 <div class="controls-row">
@@ -179,7 +190,7 @@
         </div>
         <div class="error-bar" id="errorBar"><span>⚠️</span><span id="errorMsg">Error</span><button class="error-close" id="errorClose">✕</button></div>
         <div class="player-meta">
-            <div class="meta-left"><img id="metaLogo" class="meta-logo" src="https://via.placeholder.com/32/6c5ce7/fff?text=TV"><div class="meta-info"><div class="meta-name" id="metaName">Select channel</div><div class="meta-cat" id="metaCat">Auto Sound • Efficient Engine</div></div></div>
+            <div class="meta-left"><img id="metaLogo" class="meta-logo" src="https://via.placeholder.com/32/6c5ce7/fff?text=TV"><div class="meta-info"><div class="meta-name" id="metaName">Select channel</div><div class="meta-cat" id="metaCat">Auto Sound • Tap to enable</div></div></div>
             <div class="meta-status"><span class="live-badge loading" id="liveBadge"></span><span class="status-label loading" id="statusLabel">IDLE</span></div>
         </div>
     </div>
@@ -251,13 +262,13 @@
     <!-- FOOTER -->
     <div style="margin-top:28px;padding-top:14px;border-top:1px solid rgba(128,128,128,.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
         <span><i class="fas fa-crown" style="color:var(--accent);margin-right:6px;"></i>Savidya TV · IPTV</span>
-        <span>v3.0 · Powered by Clapper</span>
+        <span>v3.1 · Auto Sound</span>
     </div>
 </div>
 
 <div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg">Done</span></div>
 
-<!-- Font Awesome for icons -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <script>
@@ -271,9 +282,9 @@
     let channels=[], hls=null, currentChannel=null;
     let favorites=JSON.parse(localStorage.getItem('cl_favs')||'[]');
     let currentCountry='in', showFavorites=false;
-    let userInteracted=false;
+    let soundEnabled = false; // track if sound has been enabled
 
-    // Default: LIGHT theme (dark optional)
+    // Default: LIGHT theme
     let isDark = localStorage.getItem('cl_theme') === 'dark';
 
     const video=document.getElementById('player-video');
@@ -332,6 +343,40 @@
     function updatePlayUI(isPlaying){ if(isPlaying){ playIcon.style.display='none'; pauseIcon.style.display='block'; } else { playIcon.style.display='block'; pauseIcon.style.display='none'; } }
     function updateVolUI(muted){ if(muted){ volIcon.style.display='none'; muteIcon.style.display='block'; } else { volIcon.style.display='block'; muteIcon.style.display='none'; } }
 
+    // ===== AUTO SOUND: try to enable sound =====
+    function enableSoundAndPlay(){
+        if(soundEnabled) return;
+        soundEnabled = true;
+        video.muted = false;
+        video.volume = parseFloat(volSlider.value) || 1;
+        updateVolUI(false);
+        soundOverlay.classList.remove('active');
+        const p = video.play();
+        if(p) p.catch(()=>{});
+        // Update status
+        setStatus('on','LIVE • 🔊 Sound ON');
+        metaCat.textContent = '🔊 Sound enabled';
+    }
+
+    // ===== GLOBAL: ANY TAP/CLICK enables sound =====
+    document.addEventListener('click', function(e) {
+        if(!soundEnabled && video.src){
+            enableSoundAndPlay();
+        }
+    }, false);
+
+    document.addEventListener('touchstart', function(e) {
+        if(!soundEnabled && video.src){
+            enableSoundAndPlay();
+        }
+    }, { passive: true });
+
+    // ===== Sound overlay click =====
+    soundOverlay.addEventListener('click', function(e) {
+        e.stopPropagation();
+        enableSoundAndPlay();
+    });
+
     // ===== PARSE & FETCH =====
     function parseM3U(text){ const lines=text.split('\n');const result=[];let cur={}; for(const line of lines){ const t=line.trim(); if(t.startsWith('#EXTINF')){ const name=t.match(/,([^,]*)$/);const logo=t.match(/tvg-logo="([^"]*)"/i);const cat=t.match(/group-title="([^"]*)"/i); cur={name:name?name[1].trim():'Unknown',logo:logo?logo[1]:'',category:cat?cat[1]:'General'}; }else if(t && !t.startsWith('#') && cur.name){ cur.url=t;cur.id=btoa(t).slice(0,14); if(!cur.name.toLowerCase().includes('playlist') && cur.logo){result.push({...cur})} cur={}; } } return result; }
 
@@ -349,24 +394,72 @@
     function destroyHls(){ if(hls){try{hls.destroy()}catch(_){} hls=null;} video.removeAttribute('src'); try{video.load()}catch(_){} }
 
     function playChannel(ch, scroll=true){
-        if(!ch) return; currentChannel=ch; errorBar.classList.remove('active');
-        metaName.textContent=ch.name; metaCat.textContent=ch.category; metaLogo.src=ch.logo||'https://via.placeholder.com/32/6c5ce7/fff?text=TV';
-        setStatus('loading','CONNECTING'); progressFill.style.width='0%'; progressBuffer.style.width='0%';
+        if(!ch) return; 
+        // Reset sound state for new channel
+        soundEnabled = false;
+        currentChannel=ch; 
+        errorBar.classList.remove('active');
+        metaName.textContent=ch.name; 
+        metaCat.textContent=ch.category + ' · 🔇 Tap to enable sound'; 
+        metaLogo.src=ch.logo||'https://via.placeholder.com/32/6c5ce7/fff?text=TV';
+        setStatus('loading','CONNECTING'); 
+        progressFill.style.width='0%'; 
+        progressBuffer.style.width='0%';
         destroyHls();
-        video.muted=false; video.volume=parseFloat(volSlider.value)||1; updateVolUI(false);
-        const attemptPlayWithSound = () => { const p = video.play(); if(p){ p.then(()=>{ setStatus('on','LIVE • Sound ON'); soundOverlay.classList.remove('active'); updatePlayUI(true); }).catch(()=>{ video.muted=true; updateVolUI(true); video.play().then(()=>{ setStatus('on','LIVE'); if(!userInteracted) soundOverlay.classList.add('active'); }); }); } };
+        
+        // Start muted so video plays, then show overlay for sound
+        video.muted = true;
+        updateVolUI(true);
+        video.volume = parseFloat(volSlider.value) || 1;
+        soundOverlay.classList.add('active');
+        soundEnabled = false;
+
+        const attemptPlay = () => {
+            const p = video.play();
+            if(p){
+                p.then(()=>{
+                    setStatus('on','LIVE • 🔇 Muted');
+                    // Sound not yet enabled, show overlay
+                }).catch(()=>{
+                    // Even if play fails, retry
+                    setTimeout(()=>{ video.play().catch(()=>{}); }, 500);
+                });
+            }
+        };
+
         if(Hls.isSupported()){
             hls=new Hls({ enableWorker:true, lowLatencyMode:true, backBufferLength:30, maxBufferLength:6, maxMaxBufferLength:12, capLevelToPlayerSize:true, autoStartLoad:true, startLevel:-1 });
             hls.loadSource(ch.url); hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED,(_,data)=>{ qualityPicker.innerHTML='<option value="-1">Auto</option>'; if(data.levels && data.levels.length>1){ data.levels.forEach((l,i)=>{ const label=l.height?`${l.height}p`:`${Math.round(l.bitrate/1000)}k`; qualityPicker.innerHTML+=`<option value="${i}">${label}</option>`; }); qualityPicker.style.display='inline-block'; } else qualityPicker.style.display='none'; attemptPlayWithSound(); });
+            hls.on(Hls.Events.MANIFEST_PARSED,(_,data)=>{ qualityPicker.innerHTML='<option value="-1">Auto</option>'; if(data.levels && data.levels.length>1){ data.levels.forEach((l,i)=>{ const label=l.height?`${l.height}p`:`${Math.round(l.bitrate/1000)}k`; qualityPicker.innerHTML+=`<option value="${i}">${label}</option>`; }); qualityPicker.style.display='inline-block'; } else qualityPicker.style.display='none'; attemptPlay(); });
             hls.on(Hls.Events.ERROR,(_,data)=>{ if(data.fatal){ if(data.type===Hls.ErrorTypes.NETWORK_ERROR){hls.startLoad();} else if(data.type===Hls.ErrorTypes.MEDIA_ERROR){hls.recoverMediaError();} } });
-        } else { video.src=ch.url; attemptPlayWithSound(); }
+        } else { 
+            video.src=ch.url; 
+            attemptPlay(); 
+        }
+
         if(scroll) document.querySelector('.player-wrapper').scrollIntoView({behavior:'smooth',block:'center'});
         renderGrid();
     }
 
-    soundOverlay.onclick=()=>{ userInteracted=true; video.muted=false; video.volume=1; volSlider.value=1; updateVolUI(false); video.play().then(()=>{ soundOverlay.classList.remove('active'); setStatus('on','LIVE • Sound ON'); }); };
-    document.addEventListener('click',()=>{ userInteracted=true; if(!video.muted) soundOverlay.classList.remove('active'); },{once:true});
+    // ===== Video event listeners =====
+    video.onplay=function(){ updatePlayUI(true); playerContainer.classList.remove('show-controls'); };
+    video.onpause=function(){ updatePlayUI(false); playerContainer.classList.add('show-controls'); };
+    video.onwaiting=function(){ if(!video.paused) setStatus('loading','BUFFERING') };
+    video.onplaying=function(){ 
+        if(soundEnabled){
+            setStatus('on','LIVE • 🔊 Sound ON');
+            soundOverlay.classList.remove('active');
+        } else {
+            setStatus('on','LIVE • 🔇 Muted');
+            soundOverlay.classList.add('active');
+        }
+    };
+    video.addEventListener('progress',()=>{if(video.buffered.length>0){const bufferedEnd=video.buffered.end(video.buffered.length-1); const dur=video.duration||100; if(isFinite(dur)) progressBuffer.style.width=(bufferedEnd/dur*100)+'%';}});
+    progressTrack.onclick=function(e){const rect=progressTrack.getBoundingClientRect(); const pct=(e.clientX-rect.left)/rect.width; if(video.duration && isFinite(video.duration)) video.currentTime=pct*video.duration;};
+    volSlider.oninput=function(){video.volume=parseFloat(this.value); video.muted=video.volume===0; updateVolUI(video.muted); if(!video.muted && soundEnabled) soundOverlay.classList.remove('active');};
+    muteBtn.onclick=function(){video.muted=!video.muted; updateVolUI(video.muted); if(!video.muted){volSlider.value=video.volume||1; if(soundEnabled) soundOverlay.classList.remove('active');} };
+    fsBtn.onclick=function(){const w=document.querySelector('.player-wrapper'); if(!document.fullscreenElement){w.requestFullscreen?.()||w.webkitRequestFullscreen?.()} else {document.exitFullscreen?.()}};
+    pipBtn.onclick=async()=>{try{if(document.pictureInPictureElement){await document.exitPictureInPicture();} else if(video.readyState>0){await video.requestPictureInPicture();}}catch(e){}};
 
     function renderGrid(){
         const cat=catFilter.value; const search=searchInput.value.toLowerCase().trim();
@@ -374,25 +467,14 @@
         countBadge.textContent=filtered.length+' channels';
         grid.innerHTML=''; if(filtered.length===0){grid.innerHTML=`<div class="empty-state"><div>📭</div><div>No channels</div></div>`;return;}
         const frag=document.createDocumentFragment();
-        filtered.forEach(ch=>{ const card=document.createElement('div'); card.className='chan-card'; if(currentChannel&&currentChannel.id===ch.id) card.classList.add('active'); const isFav=favorites.includes(ch.id); card.innerHTML=`<button class="chan-fav ${isFav?'active':''}" data-id="${ch.id}">${isFav?'❤️':'♡'}</button><span class="chan-dot on"></span><img src="${ch.logo||'https://via.placeholder.com/44/6c5ce7/fff?text=TV'}" loading="lazy" onerror="this.src='https://via.placeholder.com/44/6c5ce7/fff?text=TV'"><span class="chan-name">${ch.name}</span><span class="chan-cat">${ch.category||'General'}</span><button class="chan-url" data-url="${ch.url}">📋</button>`; card.onclick=(e)=>{if(e.target.closest('.chan-fav')||e.target.closest('.chan-url')) return; userInteracted=true; playChannel(ch,true);}; card.querySelector('.chan-fav').onclick=(e)=>{e.stopPropagation(); const id=e.target.dataset.id; if(favorites.includes(id)){favorites=favorites.filter(f=>f!==id);} else {favorites.push(id);} localStorage.setItem('cl_favs',JSON.stringify(favorites)); renderGrid();}; card.querySelector('.chan-url').onclick=(e)=>{e.stopPropagation(); navigator.clipboard.writeText(e.target.dataset.url).then(()=>showToast('Copied','📋'))}; frag.appendChild(card); });
+        filtered.forEach(ch=>{ const card=document.createElement('div'); card.className='chan-card'; if(currentChannel&&currentChannel.id===ch.id) card.classList.add('active'); const isFav=favorites.includes(ch.id); card.innerHTML=`<button class="chan-fav ${isFav?'active':''}" data-id="${ch.id}">${isFav?'❤️':'♡'}</button><span class="chan-dot on"></span><img src="${ch.logo||'https://via.placeholder.com/44/6c5ce7/fff?text=TV'}" loading="lazy" onerror="this.src='https://via.placeholder.com/44/6c5ce7/fff?text=TV'"><span class="chan-name">${ch.name}</span><span class="chan-cat">${ch.category||'General'}</span><button class="chan-url" data-url="${ch.url}">📋</button>`; card.onclick=(e)=>{if(e.target.closest('.chan-fav')||e.target.closest('.chan-url')) return; playChannel(ch,true);}; card.querySelector('.chan-fav').onclick=(e)=>{e.stopPropagation(); const id=e.target.dataset.id; if(favorites.includes(id)){favorites=favorites.filter(f=>f!==id);} else {favorites.push(id);} localStorage.setItem('cl_favs',JSON.stringify(favorites)); renderGrid();}; card.querySelector('.chan-url').onclick=(e)=>{e.stopPropagation(); navigator.clipboard.writeText(e.target.dataset.url).then(()=>showToast('Copied','📋'))}; frag.appendChild(card); });
         grid.appendChild(frag);
     }
 
     function buildCategories(){ const cats=[...new Set(channels.map(c=>c.category))].filter(Boolean).sort(); catFilter.innerHTML='<option value="all">📂 All</option>'; cats.forEach(c=>{catFilter.innerHTML+=`<option value="${c}">${c}</option>`}); }
 
     qualityPicker.onchange=function(){if(hls){hls.currentLevel=parseInt(this.value);}};
-    playBtn.onclick=function(){if(video.paused){userInteracted=true; video.muted=false; video.play().catch(()=>{});} else video.pause();};
-    video.onplay=function(){updatePlayUI(true); playerContainer.classList.remove('show-controls');};
-    video.onpause=function(){updatePlayUI(false); playerContainer.classList.add('show-controls');};
-    video.onwaiting=function(){if(!video.paused) setStatus('loading','BUFFERING')};
-    video.onplaying=function(){setStatus('on','LIVE • 🔊'); soundOverlay.classList.remove('active');};
-    video.addEventListener('progress',()=>{if(video.buffered.length>0){const bufferedEnd=video.buffered.end(video.buffered.length-1); const dur=video.duration||100; if(isFinite(dur)) progressBuffer.style.width=(bufferedEnd/dur*100)+'%';}});
-    progressTrack.onclick=function(e){const rect=progressTrack.getBoundingClientRect(); const pct=(e.clientX-rect.left)/rect.width; if(video.duration && isFinite(video.duration)) video.currentTime=pct*video.duration;};
-    volSlider.oninput=function(){video.volume=parseFloat(this.value); video.muted=video.volume===0; updateVolUI(video.muted); if(!video.muted) soundOverlay.classList.remove('active');};
-    muteBtn.onclick=function(){video.muted=!video.muted; updateVolUI(video.muted); if(!video.muted){volSlider.value=video.volume||1; soundOverlay.classList.remove('active');} };
-    fsBtn.onclick=function(){const w=document.querySelector('.player-wrapper'); if(!document.fullscreenElement){w.requestFullscreen?.()||w.webkitRequestFullscreen?.()} else {document.exitFullscreen?.()}};
-    pipBtn.onclick=async()=>{try{if(document.pictureInPictureElement){await document.exitPictureInPicture();} else if(video.readyState>0){await video.requestPictureInPicture();}}catch(e){}};
-
+    playBtn.onclick=function(){if(video.paused){video.muted=false; updateVolUI(false); video.play().catch(()=>{});} else video.pause();};
     searchInput.oninput=renderGrid; catFilter.onchange=renderGrid;
     viewFavBtn.onclick=function(){showFavorites=!showFavorites; viewFavBtn.textContent=showFavorites?'❤️ All':'❤️ Fav'; renderGrid();};
 
@@ -406,7 +488,7 @@
     }
     countryPicker.onchange=function(){const c=this.value; if(c){window.history.pushState({country:c},'','?country='+c); fetchChannels(c);}};
 
-    // ===== MALAYALAM DROPDOWN (for carousel) =====
+    // ===== MALAYALAM DROPDOWN =====
     const mlBtn = document.getElementById('malayalamBtn');
     const mlDrop = document.getElementById('malayalamDropdown');
     if(mlBtn && mlDrop){
