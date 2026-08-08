@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
     <style>
-        /* ===== Base CSS (Light + Dark) ===== */
+        /* ===== Base CSS (Light + Dark) - same as before ===== */
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f8f9fc;--bg4:#e8ecf1;--text:#1a1a2e;--text2:#555577;--text3:#8888aa;--accent:#6c5ce7;--gradient:linear-gradient(135deg,#6c5ce7,#a29bfe);--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.06);--transition:all .2s cubic-bezier(.4,0,.2,1)}
         body.dark-mode{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--bg4:#222233;--text:#f0f0f5;--text2:#8888aa;--text3:#555577;--shadow:0 4px 24px rgba(0,0,0,.6)}
@@ -99,7 +99,7 @@
         .tv-card .label{font-weight:600;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.2}
         .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 8px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
 
-        /* ===== MALAYALAM DROPDOWN (outside carousel) ===== */
+        /* ===== SPECIAL MALAYALAM DROPDOWN (outside carousel) ===== */
         .malayalam-dropdown-wrapper {
             display: flex;
             align-items: center;
@@ -271,6 +271,10 @@
             <div class="tv-section-title"><div class="accent-line"></div><h2><i class="fas fa-language"></i> Languages</h2></div>
             <span class="tv-section-more">8 Languages</span>
         </div>
+        <div class="tv-carousel">
+            <!-- Malayalam is now outside carousel as a special dropdown, but we still show the other languages in carousel -->
+            <!-- We'll place Malayalam dropdown right after the carousel header -->
+        </div>
         <!-- MALAYALAM DROPDOWN (outside carousel) -->
         <div class="malayalam-dropdown-wrapper">
             <button class="dropdown-toggle" id="malayalamToggle">
@@ -331,7 +335,7 @@
 
     <div style="margin-top:28px;padding-top:14px;border-top:1px solid rgba(128,128,128,.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
         <span><i class="fas fa-crown" style="color:var(--accent);margin-right:6px;"></i>Savidya TV · IPTV</span>
-        <span>v4.3 · Stream 1 Fix</span>
+        <span>v4.2 · Malayalam Fixed</span>
     </div>
 </div>
 
@@ -343,7 +347,7 @@
 (function(){
     'use strict';
 
-    // ===== COUNTRY LIST =====
+    // ===== COUNTRY LIST (for country picker) =====
     const COUNTRIES = [
         {code:'in',name:'India',flag:'🇮🇳'},{code:'us',name:'United States',flag:'🇺🇸'},{code:'gb',name:'United Kingdom',flag:'🇬🇧'},{code:'ca',name:'Canada',flag:'🇨🇦'},{code:'au',name:'Australia',flag:'🇦🇺'},{code:'de',name:'Germany',flag:'🇩🇪'},{code:'fr',name:'France',flag:'🇫🇷'},{code:'it',name:'Italy',flag:'🇮🇹'},{code:'es',name:'Spain',flag:'🇪🇸'},{code:'pt',name:'Portugal',flag:'🇵🇹'},{code:'nl',name:'Netherlands',flag:'🇳🇱'},{code:'be',name:'Belgium',flag:'🇧🇪'},{code:'ch',name:'Switzerland',flag:'🇨🇭'},{code:'at',name:'Austria',flag:'🇦🇹'},{code:'se',name:'Sweden',flag:'🇸🇪'},{code:'no',name:'Norway',flag:'🇳🇴'},{code:'dk',name:'Denmark',flag:'🇩🇰'},{code:'fi',name:'Finland',flag:'🇫🇮'},{code:'pl',name:'Poland',flag:'🇵🇱'},{code:'cz',name:'Czechia',flag:'🇨🇿'},{code:'gr',name:'Greece',flag:'🇬🇷'},{code:'tr',name:'Turkey',flag:'🇹🇷'},{code:'ru',name:'Russia',flag:'🇷🇺'},{code:'ua',name:'Ukraine',flag:'🇺🇦'},{code:'ae',name:'UAE',flag:'🇦🇪'},{code:'sa',name:'Saudi Arabia',flag:'🇸🇦'},{code:'eg',name:'Egypt',flag:'🇪🇬'},{code:'za',name:'South Africa',flag:'🇿🇦'},{code:'ng',name:'Nigeria',flag:'🇳🇬'},{code:'ke',name:'Kenya',flag:'🇰🇪'},{code:'pk',name:'Pakistan',flag:'🇵🇰'},{code:'bd',name:'Bangladesh',flag:'🇧🇩'},{code:'lk',name:'Sri Lanka',flag:'🇱🇰'},{code:'np',name:'Nepal',flag:'🇳🇵'},{code:'my',name:'Malaysia',flag:'🇲🇾'},{code:'sg',name:'Singapore',flag:'🇸🇬'},{code:'id',name:'Indonesia',flag:'🇮🇩'},{code:'ph',name:'Philippines',flag:'🇵🇭'},{code:'vn',name:'Vietnam',flag:'🇻🇳'},{code:'th',name:'Thailand',flag:'🇹🇭'},{code:'jp',name:'Japan',flag:'🇯🇵'},{code:'kr',name:'South Korea',flag:'🇰🇷'},{code:'cn',name:'China',flag:'🇨🇳'},{code:'tw',name:'Taiwan',flag:'🇹🇼'},{code:'hk',name:'Hong Kong',flag:'🇭🇰'},{code:'ar',name:'Argentina',flag:'🇦🇷'},{code:'br',name:'Brazil',flag:'🇧🇷'},{code:'cl',name:'Chile',flag:'🇨🇱'},{code:'co',name:'Colombia',flag:'🇨🇴'},{code:'mx',name:'Mexico',flag:'🇲🇽'},{code:'pe',name:'Peru',flag:'🇵🇪'},{code:'int',name:'International',flag:'🌍'}
     ];
@@ -401,6 +405,7 @@
     const toastMsg = document.getElementById('toastMsg');
     const toastIcon = document.getElementById('toastIcon');
     const playerContainer = document.getElementById('playerContainer');
+    // Malayalam elements
     const malayalamToggle = document.getElementById('malayalamToggle');
     const malayalamList = document.getElementById('malayalamStreamList');
 
@@ -479,7 +484,7 @@
         document.querySelector('.player-wrapper').classList.toggle('fullscreen', !!document.fullscreenElement);
     });
 
-    // ===== PARSER (FIXED: accepts channels without logo) =====
+    // ===== PARSER =====
     function parseM3U(text) {
         const lines = text.split('\n');
         const result = [];
@@ -498,8 +503,7 @@
             } else if (t && !t.startsWith('#') && cur.name) {
                 cur.url = t;
                 cur.id = btoa(t).slice(0, 12);
-                // Remove the logo requirement - accept all channels
-                if (cur.name !== 'Unknown' || cur.url) {
+                if (cur.logo && cur.logo !== '') {
                     result.push({...cur});
                 }
                 cur = {};
@@ -508,44 +512,37 @@
         return result;
     }
 
-    // ===== FETCH CHANNELS (with multiple proxies) =====
+    // ===== FETCH CHANNELS (from URL) =====
     async function fetchChannelsFromUrl(url, label = '') {
         grid.innerHTML = `<div class="empty-state"><div>⏳</div><div>Loading ${label || 'channels'}...</div></div>`;
-        const proxies = [
-            null, // direct
-            'https://corsproxy.io/?',
-            'https://api.allorigins.win/raw?url=',
-            'https://thingproxy.freeboard.io/fetch/'
-        ];
-        let data = null;
-        for (const proxy of proxies) {
+        try {
+            let data = null;
             try {
-                const fetchUrl = proxy ? proxy + encodeURIComponent(url) : url;
-                const resp = await fetch(fetchUrl, { signal: AbortSignal.timeout(10000) });
-                if (!resp.ok) continue;
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('Direct fetch failed');
                 data = await resp.text();
-                if (data && data.length > 100) break;
             } catch (e) {
-                console.log('Proxy failed:', proxy, e);
-                continue;
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+                const resp = await fetch(proxyUrl);
+                if (!resp.ok) throw new Error('Proxy fetch failed');
+                data = await resp.text();
             }
-        }
-        if (!data) {
+            
+            const parsed = parseM3U(data);
+            if (parsed.length > 0) {
+                channels = parsed;
+                const count = channels.length;
+                showToast(`✅ ${count} channels loaded`, '🌍');
+                buildCategories();
+                renderGrid();
+                if (channels.length > 0) playChannel(channels[0], false);
+                return true;
+            } else {
+                throw new Error('No channels found');
+            }
+        } catch (e) {
             grid.innerHTML = `<div class="empty-state"><div>❌</div><div>Failed to load ${label || 'channels'}</div></div>`;
-            showToast('❌ Failed to load', '❌');
-            return false;
-        }
-        const parsed = parseM3U(data);
-        if (parsed.length > 0) {
-            channels = parsed;
-            showToast(`✅ ${channels.length} channels loaded`, '🌍');
-            buildCategories();
-            renderGrid();
-            if (channels.length > 0) playChannel(channels[0], false);
-            return true;
-        } else {
-            grid.innerHTML = `<div class="empty-state"><div>❌</div><div>No channels found in ${label}</div></div>`;
-            showToast('❌ No channels found', '❌');
+            showToast('❌ Failed to load channels', '❌');
             return false;
         }
     }
@@ -860,7 +857,7 @@
         }
     });
 
-    // ===== MALAYALAM DROPDOWN =====
+    // ===== MALAYALAM DROPDOWN (NEW - outside carousel) =====
     if (malayalamToggle && malayalamList) {
         malayalamToggle.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -868,6 +865,7 @@
             this.classList.toggle('active');
         });
 
+        // Close when clicking outside
         document.addEventListener('click', function(e) {
             if (!malayalamToggle.contains(e.target) && !malayalamList.contains(e.target)) {
                 malayalamList.classList.remove('active');
@@ -875,6 +873,7 @@
             }
         });
 
+        // Stream items - load playlist
         malayalamList.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -890,7 +889,7 @@
         });
     }
 
-    // ===== CAROUSEL CARDS =====
+    // ===== CAROUSEL CARDS - Direct Load =====
     document.querySelectorAll('.tv-card[data-url]').forEach(card => {
         card.addEventListener('click', function() {
             const url = this.dataset.url;
