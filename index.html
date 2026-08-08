@@ -99,15 +99,15 @@
         .tv-card .label{font-weight:600;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.2}
         .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 8px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
         
-        /* ===== SUB MENU (for Malayalam) ===== */
+        /* ===== SUB MENU (for Malayalam) - FIXED ===== */
         .lang-item-wrapper{position:relative;flex:0 0 120px;scroll-snap-align:start}
         .lang-item-wrapper .tv-card{height:100%;cursor:pointer}
-        .stream-dropdown{list-style:none;margin:6px 0 0 0;padding:4px 0;background:var(--bg2);border-radius:16px;border:1px solid rgba(128,128,128,.08);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.1);display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;min-width:150px}
-        .stream-dropdown.show{display:block;animation:dropFade .2s ease}
-        @keyframes dropFade{0%{opacity:0;transform:translateY(-6px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+        .stream-dropdown{list-style:none;margin:8px 0 0 0;padding:6px 0;background:var(--bg2);border-radius:16px;border:1px solid rgba(128,128,128,.15);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.15);display:none;position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:999;min-width:180px}
+        .stream-dropdown.active{display:block;animation:dropFade .2s ease}
+        @keyframes dropFade{0%{opacity:0;transform:translateY(-8px) scale(.95)}100%{opacity:1;transform:translateY(0) scale(1)}}
         .stream-dropdown li{border-bottom:1px solid rgba(128,128,128,.06)}
         .stream-dropdown li:last-child{border-bottom:none}
-        .stream-dropdown a{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--text);font-weight:500;font-size:.8rem;text-decoration:none;transition:all .2s;cursor:pointer}
+        .stream-dropdown a{display:flex;align-items:center;gap:12px;padding:12px 16px;color:var(--text);font-weight:500;font-size:.8rem;text-decoration:none;transition:all .2s;cursor:pointer}
         .stream-dropdown a i{color:var(--accent);width:18px}
         .stream-dropdown a:hover{background:var(--bg3);padding-left:22px}
 
@@ -205,8 +205,8 @@
             <span class="tv-section-more">8 Languages</span>
         </div>
         <div class="tv-carousel">
-            <!-- Malayalam with Sub Menu (4 streams) -->
-            <div class="lang-item-wrapper">
+            <!-- Malayalam with Sub Menu (4 streams) - FIXED -->
+            <div class="lang-item-wrapper" id="malayalamWrapper">
                 <div class="tv-card" id="malayalamBtn">
                     <span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span>
                     <span class="label">Malayalam</span>
@@ -266,7 +266,7 @@
 
     <div style="margin-top:28px;padding-top:14px;border-top:1px solid rgba(128,128,128,.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
         <span><i class="fas fa-crown" style="color:var(--accent);margin-right:6px;"></i>Savidya TV · IPTV</span>
-        <span>v4.0 · All Features</span>
+        <span>v4.1 · Fixed Malayalam</span>
     </div>
 </div>
 
@@ -787,24 +787,34 @@
         }
     });
 
-    // ===== MALAYALAM DROPDOWN (Sub Menu with 4 streams) =====
-    const mlBtn = document.getElementById('malayalamBtn');
+    // ===== MALAYALAM DROPDOWN (Sub Menu with 4 streams) - FIXED =====
+    const mlWrapper = document.getElementById('malayalamWrapper');
     const mlDrop = document.getElementById('malayalamDropdown');
-    if (mlBtn && mlDrop) {
-        mlBtn.addEventListener('click', (e) => {
+    
+    if (mlWrapper && mlDrop) {
+        // Click on the wrapper toggles dropdown (this catches clicks on any part of the card)
+        mlWrapper.addEventListener('click', function(e) {
+            // If click is on a dropdown item (a tag), don't toggle - let the item handler work
+            if (e.target.closest('.stream-dropdown a')) return;
             e.stopPropagation();
-            mlDrop.classList.toggle('show');
+            mlDrop.classList.toggle('active');
         });
-        document.addEventListener('click', (e) => {
-            const wrapper = mlBtn.closest('.lang-item-wrapper');
-            if (wrapper && !wrapper.contains(e.target)) mlDrop.classList.remove('show');
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mlWrapper.contains(e.target)) {
+                mlDrop.classList.remove('active');
+            }
         });
+
+        // Dropdown items - load playlist on click
         mlDrop.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 const url = this.dataset.url;
                 if (url) {
-                    mlDrop.classList.remove('show');
+                    mlDrop.classList.remove('active');
                     const label = this.textContent.trim();
                     fetchChannelsFromUrl(url, label);
                 }
