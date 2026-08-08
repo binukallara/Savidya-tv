@@ -92,12 +92,14 @@
         .tv-carousel::-webkit-scrollbar{height:4px}
         .tv-carousel::-webkit-scrollbar-track{background:var(--bg3);border-radius:10px}
         .tv-carousel::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
-        .tv-card{flex:0 0 120px;scroll-snap-align:start;background:var(--bg2);border-radius:var(--radius);padding:18px 8px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;border:1px solid rgba(128,128,128,.08);box-shadow:var(--shadow);transition:all var(--transition);min-height:100px;position:relative}
+        .tv-card{flex:0 0 120px;scroll-snap-align:start;background:var(--bg2);border-radius:var(--radius);padding:18px 8px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;border:1px solid rgba(128,128,128,.08);box-shadow:var(--shadow);transition:all var(--transition);min-height:100px;position:relative;cursor:pointer}
         .tv-card:hover{transform:translateY(-4px) scale(1.02);background:var(--bg3);border-color:var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.06)}
         .tv-card .icon-wrap{font-size:1.8rem;color:var(--accent);transition:transform var(--transition)}
         .tv-card:hover .icon-wrap{transform:scale(1.1) rotate(-4deg)}
         .tv-card .label{font-weight:600;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.2}
         .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 8px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
+        
+        /* ===== SUB MENU (for Malayalam) ===== */
         .lang-item-wrapper{position:relative;flex:0 0 120px;scroll-snap-align:start}
         .lang-item-wrapper .tv-card{height:100%;cursor:pointer}
         .stream-dropdown{list-style:none;margin:6px 0 0 0;padding:4px 0;background:var(--bg2);border-radius:16px;border:1px solid rgba(128,128,128,.08);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.1);display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;min-width:150px}
@@ -105,7 +107,7 @@
         @keyframes dropFade{0%{opacity:0;transform:translateY(-6px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
         .stream-dropdown li{border-bottom:1px solid rgba(128,128,128,.06)}
         .stream-dropdown li:last-child{border-bottom:none}
-        .stream-dropdown a{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--text);font-weight:500;font-size:.8rem;text-decoration:none;transition:all .2s}
+        .stream-dropdown a{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--text);font-weight:500;font-size:.8rem;text-decoration:none;transition:all .2s;cursor:pointer}
         .stream-dropdown a i{color:var(--accent);width:18px}
         .stream-dropdown a:hover{background:var(--bg3);padding-left:22px}
 
@@ -191,7 +193,7 @@
         </div>
         <div class="error-bar" id="errorBar"><span>⚠️</span><span id="errorMsg">Error</span><button class="error-close" id="errorClose">✕</button></div>
         <div class="player-meta">
-            <div class="meta-left"><img id="metaLogo" class="meta-logo" src="https://via.placeholder.com/32/6c5ce7/fff?text=TV"><div class="meta-info"><div class="meta-name" id="metaName">Select channel</div><div class="meta-cat" id="metaCat">Select a country & channel</div></div></div>
+            <div class="meta-left"><img id="metaLogo" class="meta-logo" src="https://via.placeholder.com/32/6c5ce7/fff?text=TV"><div class="meta-info"><div class="meta-name" id="metaName">Select channel</div><div class="meta-cat" id="metaCat">Select a language or category</div></div></div>
             <div class="meta-status"><span class="live-badge loading" id="liveBadge"></span><span class="status-label loading" id="statusLabel">IDLE</span></div>
         </div>
     </div>
@@ -203,38 +205,47 @@
             <span class="tv-section-more">8 Languages</span>
         </div>
         <div class="tv-carousel">
+            <!-- Malayalam with Sub Menu (4 streams) -->
             <div class="lang-item-wrapper">
-                <div class="tv-card" id="malayalamBtn"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Malayalam</span><span class="live-tag">LIVE</span></div>
+                <div class="tv-card" id="malayalamBtn">
+                    <span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span>
+                    <span class="label">Malayalam</span>
+                    <span class="live-tag">LIVE</span>
+                </div>
                 <ul class="stream-dropdown" id="malayalamDropdown">
-                    <li><a href="malayalam-stream-1.html"><i class="fas fa-play"></i> Stream 1</a></li>
-                    <li><a href="malayalam-stream-2.html"><i class="fas fa-play"></i> Stream 2</a></li>
+                    <li><a data-url="https://mal2026.pages.dev/mlforapp.m3u"><i class="fas fa-play"></i> Stream 1</a></li>
+                    <li><a data-url="https://iptv-org.github.io/iptv/languages/mal.m3u"><i class="fas fa-play"></i> Stream 2</a></li>
+                    <li><a data-url="https://m3u.ch/b2VPvT.m3u"><i class="fas fa-play"></i> Stream 3</a></li>
+                    <li><a data-url="https://raw.githubusercontent.com/djanshu/helperzplaylist/refs/heads/main/playlist"><i class="fas fa-play"></i> Stream 4</a></li>
                 </ul>
             </div>
-            <a href="tamil.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Tamil</span><span class="live-tag">LIVE</span></a>
-            <a href="hindi.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Hindi</span><span class="live-tag">LIVE</span></a>
-            <a href="telugu.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Telugu</span></a>
-            <a href="kannada.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Kannada</span></a>
-            <a href="english.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">English</span><span class="live-tag">LIVE</span></a>
-            <a href="bengali.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Bengali</span></a>
-            <a href="marathi.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Marathi</span></a>
+            <!-- Other Languages (direct load) -->
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tam.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Tamil</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/hin.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Hindi</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tel.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Telugu</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/kan.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Kannada</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/eng.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">English</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/ben.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Bengali</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/mar.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Marathi</span></div>
         </div>
     </section>
 
     <section class="tv-section">
         <div class="tv-section-header">
             <div class="tv-section-title"><div class="accent-line" style="background:linear-gradient(180deg,#fd79a8,#fdcb6e);"></div><h2><i class="fas fa-th-large"></i> Categories</h2></div>
-            <span class="tv-section-more">9 Genres</span>
+            <span class="tv-section-more">10+ Genres</span>
         </div>
         <div class="tv-carousel">
-            <a href="news.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-newspaper"></i></span><span class="label">News</span></a>
-            <a href="sports.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-futbol"></i></span><span class="label">Sports</span><span class="live-tag">LIVE</span></a>
-            <a href="movies.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-clapperboard"></i></span><span class="label">Movies</span></a>
-            <a href="comedy.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-face-smile"></i></span><span class="label">Comedy</span></a>
-            <a href="kids.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-child"></i></span><span class="label">Kids</span></a>
-            <a href="music.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-music"></i></span><span class="label">Music</span></a>
-            <a href="devotional.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-pray"></i></span><span class="label">Devotional</span></a>
-            <a href="series.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-tv"></i></span><span class="label">Series</span></a>
-            <a href="entertainment.html" class="tv-card"><span class="icon-wrap"><i class="fas fa-film"></i></span><span class="label">Entertainment</span><span class="live-tag">LIVE</span></a>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/news.m3u"><span class="icon-wrap"><i class="fas fa-newspaper"></i></span><span class="label">News</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/sports.m3u"><span class="icon-wrap"><i class="fas fa-futbol"></i></span><span class="label">Sports</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/movies.m3u"><span class="icon-wrap"><i class="fas fa-clapperboard"></i></span><span class="label">Movies</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/comedy.m3u"><span class="icon-wrap"><i class="fas fa-face-smile"></i></span><span class="label">Comedy</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/kids.m3u"><span class="icon-wrap"><i class="fas fa-child"></i></span><span class="label">Kids</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/music.m3u"><span class="icon-wrap"><i class="fas fa-music"></i></span><span class="label">Music</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/religious.m3u"><span class="icon-wrap"><i class="fas fa-pray"></i></span><span class="label">Devotional</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/series.m3u"><span class="icon-wrap"><i class="fas fa-tv"></i></span><span class="label">Series</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/entertainment.m3u"><span class="icon-wrap"><i class="fas fa-film"></i></span><span class="label">Entertainment</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/education.m3u"><span class="icon-wrap"><i class="fas fa-graduation-cap"></i></span><span class="label">Education</span></div>
         </div>
     </section>
 
@@ -267,7 +278,7 @@
 (function(){
     'use strict';
 
-    // ===== COUNTRY LIST (70+ for picker) =====
+    // ===== COUNTRY LIST (for country picker) =====
     const COUNTRIES = [
         {code:'in',name:'India',flag:'🇮🇳'},{code:'us',name:'United States',flag:'🇺🇸'},{code:'gb',name:'United Kingdom',flag:'🇬🇧'},{code:'ca',name:'Canada',flag:'🇨🇦'},{code:'au',name:'Australia',flag:'🇦🇺'},{code:'de',name:'Germany',flag:'🇩🇪'},{code:'fr',name:'France',flag:'🇫🇷'},{code:'it',name:'Italy',flag:'🇮🇹'},{code:'es',name:'Spain',flag:'🇪🇸'},{code:'pt',name:'Portugal',flag:'🇵🇹'},{code:'nl',name:'Netherlands',flag:'🇳🇱'},{code:'be',name:'Belgium',flag:'🇧🇪'},{code:'ch',name:'Switzerland',flag:'🇨🇭'},{code:'at',name:'Austria',flag:'🇦🇹'},{code:'se',name:'Sweden',flag:'🇸🇪'},{code:'no',name:'Norway',flag:'🇳🇴'},{code:'dk',name:'Denmark',flag:'🇩🇰'},{code:'fi',name:'Finland',flag:'🇫🇮'},{code:'pl',name:'Poland',flag:'🇵🇱'},{code:'cz',name:'Czechia',flag:'🇨🇿'},{code:'gr',name:'Greece',flag:'🇬🇷'},{code:'tr',name:'Turkey',flag:'🇹🇷'},{code:'ru',name:'Russia',flag:'🇷🇺'},{code:'ua',name:'Ukraine',flag:'🇺🇦'},{code:'ae',name:'UAE',flag:'🇦🇪'},{code:'sa',name:'Saudi Arabia',flag:'🇸🇦'},{code:'eg',name:'Egypt',flag:'🇪🇬'},{code:'za',name:'South Africa',flag:'🇿🇦'},{code:'ng',name:'Nigeria',flag:'🇳🇬'},{code:'ke',name:'Kenya',flag:'🇰🇪'},{code:'pk',name:'Pakistan',flag:'🇵🇰'},{code:'bd',name:'Bangladesh',flag:'🇧🇩'},{code:'lk',name:'Sri Lanka',flag:'🇱🇰'},{code:'np',name:'Nepal',flag:'🇳🇵'},{code:'my',name:'Malaysia',flag:'🇲🇾'},{code:'sg',name:'Singapore',flag:'🇸🇬'},{code:'id',name:'Indonesia',flag:'🇮🇩'},{code:'ph',name:'Philippines',flag:'🇵🇭'},{code:'vn',name:'Vietnam',flag:'🇻🇳'},{code:'th',name:'Thailand',flag:'🇹🇭'},{code:'jp',name:'Japan',flag:'🇯🇵'},{code:'kr',name:'South Korea',flag:'🇰🇷'},{code:'cn',name:'China',flag:'🇨🇳'},{code:'tw',name:'Taiwan',flag:'🇹🇼'},{code:'hk',name:'Hong Kong',flag:'🇭🇰'},{code:'ar',name:'Argentina',flag:'🇦🇷'},{code:'br',name:'Brazil',flag:'🇧🇷'},{code:'cl',name:'Chile',flag:'🇨🇱'},{code:'co',name:'Colombia',flag:'🇨🇴'},{code:'mx',name:'Mexico',flag:'🇲🇽'},{code:'pe',name:'Peru',flag:'🇵🇪'},{code:'int',name:'International',flag:'🌍'}
     ];
@@ -284,6 +295,7 @@
     let soundEnabled = false;
     let isDark = localStorage.getItem('theme') === 'dark';
     let showFavorites = false;
+    let currentM3UUrl = '';
 
     // ===== DOM =====
     const video = document.getElementById('player-video');
@@ -420,7 +432,7 @@
             } else if (t && !t.startsWith('#') && cur.name) {
                 cur.url = t;
                 cur.id = btoa(t).slice(0, 12);
-                if (!cur.name.toLowerCase().includes('playlist') && cur.logo) {
+                if (cur.logo && cur.logo !== '') {
                     result.push({...cur});
                 }
                 cur = {};
@@ -429,18 +441,28 @@
         return result;
     }
 
-    // ===== FETCH CHANNELS (by country) =====
-    async function fetchChannels(country = 'in') {
-        const url = `https://iptv-org.github.io/iptv/countries/${country}.m3u`;
-        grid.innerHTML = `<div class="empty-state"><div>⏳</div><div>Loading ${country.toUpperCase()}...</div></div>`;
+    // ===== FETCH CHANNELS (from URL) =====
+    async function fetchChannelsFromUrl(url, label = '') {
+        currentM3UUrl = url;
+        grid.innerHTML = `<div class="empty-state"><div>⏳</div><div>Loading ${label || 'channels'}...</div></div>`;
         try {
-            const resp = await fetch(url);
-            if (!resp.ok) throw new Error('HTTP error');
-            const data = await resp.text();
+            let data = null;
+            try {
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('Direct fetch failed');
+                data = await resp.text();
+            } catch (e) {
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+                const resp = await fetch(proxyUrl);
+                if (!resp.ok) throw new Error('Proxy fetch failed');
+                data = await resp.text();
+            }
+            
             const parsed = parseM3U(data);
             if (parsed.length > 0) {
                 channels = parsed;
-                showToast(`✅ ${channels.length} channels (${country.toUpperCase()})`, '🌍');
+                const count = channels.length;
+                showToast(`✅ ${count} channels loaded`, '🌍');
                 buildCategories();
                 renderGrid();
                 if (channels.length > 0) playChannel(channels[0], false);
@@ -449,7 +471,7 @@
                 throw new Error('No channels found');
             }
         } catch (e) {
-            grid.innerHTML = `<div class="empty-state"><div>❌</div><div>Failed to load ${country.toUpperCase()}</div></div>`;
+            grid.innerHTML = `<div class="empty-state"><div>❌</div><div>Failed to load ${label || 'channels'}</div></div>`;
             showToast('❌ Failed to load channels', '❌');
             return false;
         }
@@ -548,7 +570,6 @@
             showError('HLS not supported');
         }
 
-        // Update recent
         recent = [ch.id, ...recent.filter(id => id !== ch.id)].slice(0, 20);
         localStorage.setItem('recent', JSON.stringify(recent));
         renderRecent();
@@ -658,12 +679,12 @@
         const c = this.value;
         if (c) {
             currentCountry = c;
-            fetchChannels(c);
+            const url = `https://iptv-org.github.io/iptv/countries/${c}.m3u`;
+            fetchChannelsFromUrl(url, c.toUpperCase());
         }
     };
 
     // ===== CONTROLS =====
-    // Play/Pause
     playBtn.onclick = function() {
         if (video.paused) {
             if (!soundEnabled) enableSound();
@@ -693,7 +714,6 @@
         }
     };
 
-    // Progress
     video.ontimeupdate = function() {
         if (video.duration) {
             const pct = (video.currentTime / video.duration) * 100;
@@ -712,7 +732,6 @@
         if (video.duration) video.currentTime = pct * video.duration;
     };
 
-    // Volume
     volSlider.oninput = function() {
         video.volume = parseFloat(this.value);
         video.muted = video.volume === 0;
@@ -728,7 +747,6 @@
         }
     };
 
-    // Quality
     qualityPicker.onchange = function() {
         if (hlsPlayer) {
             hlsPlayer.currentLevel = parseInt(this.value);
@@ -736,7 +754,6 @@
         }
     };
 
-    // PiP
     pipBtn.onclick = async function() {
         try {
             if (document.pictureInPictureElement) {
@@ -747,11 +764,9 @@
         } catch(e) {}
     };
 
-    // Search & Filter
     searchInput.oninput = renderGrid;
     catFilter.onchange = renderGrid;
 
-    // Favorites toggle
     viewFavBtn.onclick = function() {
         showFavorites = !showFavorites;
         viewFavBtn.textContent = showFavorites ? '❤️ All' : '❤️ Fav';
@@ -772,19 +787,41 @@
         }
     });
 
-    // ===== MALAYALAM DROPDOWN =====
+    // ===== MALAYALAM DROPDOWN (Sub Menu with 4 streams) =====
     const mlBtn = document.getElementById('malayalamBtn');
     const mlDrop = document.getElementById('malayalamDropdown');
     if (mlBtn && mlDrop) {
-        mlBtn.addEventListener('click', (e) => { e.stopPropagation(); mlDrop.classList.toggle('show'); });
+        mlBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mlDrop.classList.toggle('show');
+        });
         document.addEventListener('click', (e) => {
             const wrapper = mlBtn.closest('.lang-item-wrapper');
             if (wrapper && !wrapper.contains(e.target)) mlDrop.classList.remove('show');
         });
         mlDrop.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => mlDrop.classList.remove('show'));
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.dataset.url;
+                if (url) {
+                    mlDrop.classList.remove('show');
+                    const label = this.textContent.trim();
+                    fetchChannelsFromUrl(url, label);
+                }
+            });
         });
     }
+
+    // ===== CAROUSEL CARDS - Direct Load =====
+    document.querySelectorAll('.tv-card[data-url]').forEach(card => {
+        card.addEventListener('click', function() {
+            const url = this.dataset.url;
+            const label = this.querySelector('.label')?.textContent || 'channels';
+            if (url) {
+                fetchChannelsFromUrl(url, label);
+            }
+        });
+    });
 
     // ===== DOUBLE TAP SEEK =====
     let lastTap = 0;
@@ -805,7 +842,7 @@
     // ===== INIT =====
     async function init() {
         populateCountries();
-        await fetchChannels('in');
+        await fetchChannelsFromUrl('https://iptv-org.github.io/iptv/countries/in.m3u', 'India');
         setStatus('loading', 'SELECT CHANNEL');
     }
     init();
