@@ -29,73 +29,21 @@
         .country-picker{background:var(--bg3);border:1px solid var(--border-color);color:var(--text);padding:4px 28px 4px 12px;border-radius:20px;font-size:.7rem;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%238888aa'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;min-width:110px}
         .quality-picker{background:var(--bg3);border:1px solid var(--border-color);color:var(--text);padding:4px 12px;border-radius:20px;font-size:.7rem;outline:none;cursor:pointer;display:none}
 
-        /* ----- Player ----- */
-        .player-wrapper{background:var(--bg2);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;border:1px solid var(--border-color);position:relative}
-        .player-container{position:relative;background:#000;aspect-ratio:16/9;max-height:65vh;contain:content}
-        #player-video{width:100%;height:100%;display:block;background:#000}
-        .player-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10}
-        .player-overlay.active{display:flex}
-        .spinner-ring{width:36px;height:36px;border:3px solid rgba(255,255,255,.08);border-top:3px solid var(--accent);border-radius:50%;animation:spin .8s linear infinite}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .overlay-text{font-size:.8rem;color:rgba(255,255,255,.7)}
-        .player-controls{position:absolute;bottom:0;left:0;right:0;padding:18px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.9));opacity:0;transition:opacity .25s ease;z-index:11}
-        .player-container:hover .player-controls,.player-container.show-controls .player-controls{opacity:1}
-        .controls-row{display:flex;align-items:center;gap:10px}
-        .ctrl-btn{background:rgba(255,255,255,.1);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .ctrl-btn:hover{background:rgba(255,255,255,.18);transform:scale(1.05)}
-        .ctrl-btn.play{width:44px;height:44px;background:var(--gradient);box-shadow:0 2px 12px rgba(108,92,231,.4)}
-        .ctrl-btn svg{width:18px;height:18px;fill:currentColor}
-        .ctrl-btn.play svg{width:20px;height:20px}
-        .progress-wrap{flex:1;display:flex;align-items:center;gap:8px}
-        .progress-track{flex:1;height:4px;background:rgba(255,255,255,.18);border-radius:2px;cursor:pointer;position:relative;overflow:hidden}
-        .progress-buffer{position:absolute;left:0;top:0;height:100%;background:rgba(255,255,255,.25);width:0%}
-        .progress-fill{height:100%;background:var(--gradient);border-radius:2px;width:0%;position:relative}
-        .time-label{font-size:.65rem;color:rgba(255,255,255,.7);min-width:75px;text-align:center}
-        .vol-wrap{display:flex;align-items:center;gap:6px}
-        .vol-slider{width:40px;height:3px;-webkit-appearance:none;background:rgba(255,255,255,.18);border-radius:2px;outline:none;cursor:pointer}
-        .vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;cursor:pointer}
-        .player-meta{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border-top:1px solid var(--border-color);flex-wrap:wrap;gap:6px}
-        .meta-left{display:flex;align-items:center;gap:10px;min-width:0}
-        .meta-logo{width:32px;height:32px;border-radius:50%;border:1px solid var(--border-color);object-fit:cover;background:var(--bg3)}
-        .meta-name{font-weight:600;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .meta-cat{font-size:.55rem;color:var(--text2)}
-        .meta-status{display:flex;align-items:center;gap:4px;padding:2px 10px;border-radius:12px;background:var(--bg3);border:1px solid var(--border-color)}
-        .live-badge{width:6px;height:6px;border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite}
-        .live-badge.on{background:#22c55e}.live-badge.off{background:#ef4444;animation:none}.live-badge.loading{background:#f59e0b}
-        @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
-        .status-label{font-weight:500;font-size:.6rem}
-        .status-label.on{color:#22c55e}.status-label.off{color:#ef4444}.status-label.loading{color:#f59e0b}
-        .error-bar{display:none;align-items:center;gap:6px;padding:6px 12px;background:rgba(239,68,68,.08);color:#f87171;font-size:.75rem}
-        .error-bar.active{display:flex}
-        .error-close{margin-left:auto;background:none;border:none;color:#f87171;cursor:pointer}
-
-        /* ===== AUTO SOUND OVERLAY ===== */
-        #soundOverlay{
-            position:absolute;inset:0;background:rgba(0,0,0,0.5);
-            display:none;align-items:center;justify-content:center;z-index:20;
-            cursor:pointer;backdrop-filter:blur(4px);
-            flex-direction:column;gap:10px;
-        }
-        #soundOverlay.active{display:flex}
-        #soundOverlay .sound-icon{font-size:3rem;color:#fff;animation:pulse-icon 1.8s ease-in-out infinite}
-        #soundOverlay .sound-text{color:#fff;font-size:.85rem;font-weight:600;background:rgba(0,0,0,.5);padding:8px 24px;border-radius:30px;border:1px solid rgba(255,255,255,.15)}
-        @keyframes pulse-icon{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1}}
-
-        /* ===== CAROUSEL & SECTION ===== */
-        .tv-section{margin-top:20px}
-        .tv-section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+        /* ----- CAROUSEL & SECTION ----- */
+        .tv-section{margin-bottom:16px}
+        .tv-section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
         .tv-section-title{display:flex;align-items:center;gap:10px}
         .tv-section-title .accent-line{width:4px;height:24px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#fd79a8);box-shadow:0 0 20px rgba(108,92,231,.15)}
-        .tv-section-title h2{font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:-.3px}
+        .tv-section-title h2{font-size:1.05rem;font-weight:700;color:var(--text);letter-spacing:-.3px}
         .tv-section-title h2 i{color:var(--accent);margin-right:6px}
         .tv-section-more{color:var(--text2);font-size:.7rem;font-weight:600}
-        .tv-carousel{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 12px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+        .tv-carousel{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
         .tv-carousel::-webkit-scrollbar{height:4px}
         .tv-carousel::-webkit-scrollbar-track{background:var(--bg3);border-radius:10px}
         .tv-carousel::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
-        .tv-card{flex:0 0 110px;scroll-snap-align:start;background:var(--bg2);border-radius:var(--radius);padding:14px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;border:1px solid var(--border-color);box-shadow:var(--shadow);transition:all var(--transition);min-height:90px;position:relative;cursor:pointer}
+        .tv-card{flex:0 0 110px;scroll-snap-align:start;background:var(--bg2);border-radius:var(--radius);padding:12px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;border:1px solid var(--border-color);box-shadow:var(--shadow);transition:all var(--transition);min-height:85px;position:relative;cursor:pointer}
         .tv-card:hover{transform:translateY(-3px) scale(1.02);background:var(--bg3);border-color:var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.06)}
-        .tv-card .icon-wrap{font-size:1.6rem;color:var(--accent);transition:transform var(--transition)}
+        .tv-card .icon-wrap{font-size:1.5rem;color:var(--accent);transition:transform var(--transition)}
         .tv-card:hover .icon-wrap{transform:scale(1.1) rotate(-4deg)}
         .tv-card .label{font-weight:600;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.2}
         .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 6px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
@@ -105,7 +53,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin: 6px 0 12px;
+            margin: 4px 0 10px;
             flex-wrap: wrap;
         }
         .malayalam-dropdown-wrapper .dropdown-toggle {
@@ -179,6 +127,58 @@
             100% { opacity:1; transform:translateY(0) scale(1); }
         }
 
+        /* ----- Player ----- */
+        .player-wrapper{background:var(--bg2);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;border:1px solid var(--border-color);position:relative}
+        .player-container{position:relative;background:#000;aspect-ratio:16/9;max-height:65vh;contain:content}
+        #player-video{width:100%;height:100%;display:block;background:#000}
+        .player-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10}
+        .player-overlay.active{display:flex}
+        .spinner-ring{width:36px;height:36px;border:3px solid rgba(255,255,255,.08);border-top:3px solid var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .overlay-text{font-size:.8rem;color:rgba(255,255,255,.7)}
+        .player-controls{position:absolute;bottom:0;left:0;right:0;padding:18px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.9));opacity:0;transition:opacity .25s ease;z-index:11}
+        .player-container:hover .player-controls,.player-container.show-controls .player-controls{opacity:1}
+        .controls-row{display:flex;align-items:center;gap:10px}
+        .ctrl-btn{background:rgba(255,255,255,.1);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .ctrl-btn:hover{background:rgba(255,255,255,.18);transform:scale(1.05)}
+        .ctrl-btn.play{width:44px;height:44px;background:var(--gradient);box-shadow:0 2px 12px rgba(108,92,231,.4)}
+        .ctrl-btn svg{width:18px;height:18px;fill:currentColor}
+        .ctrl-btn.play svg{width:20px;height:20px}
+        .progress-wrap{flex:1;display:flex;align-items:center;gap:8px}
+        .progress-track{flex:1;height:4px;background:rgba(255,255,255,.18);border-radius:2px;cursor:pointer;position:relative;overflow:hidden}
+        .progress-buffer{position:absolute;left:0;top:0;height:100%;background:rgba(255,255,255,.25);width:0%}
+        .progress-fill{height:100%;background:var(--gradient);border-radius:2px;width:0%;position:relative}
+        .time-label{font-size:.65rem;color:rgba(255,255,255,.7);min-width:75px;text-align:center}
+        .vol-wrap{display:flex;align-items:center;gap:6px}
+        .vol-slider{width:40px;height:3px;-webkit-appearance:none;background:rgba(255,255,255,.18);border-radius:2px;outline:none;cursor:pointer}
+        .vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;cursor:pointer}
+        .player-meta{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border-top:1px solid var(--border-color);flex-wrap:wrap;gap:6px}
+        .meta-left{display:flex;align-items:center;gap:10px;min-width:0}
+        .meta-logo{width:32px;height:32px;border-radius:50%;border:1px solid var(--border-color);object-fit:cover;background:var(--bg3)}
+        .meta-name{font-weight:600;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .meta-cat{font-size:.55rem;color:var(--text2)}
+        .meta-status{display:flex;align-items:center;gap:4px;padding:2px 10px;border-radius:12px;background:var(--bg3);border:1px solid var(--border-color)}
+        .live-badge{width:6px;height:6px;border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite}
+        .live-badge.on{background:#22c55e}.live-badge.off{background:#ef4444;animation:none}.live-badge.loading{background:#f59e0b}
+        @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
+        .status-label{font-weight:500;font-size:.6rem}
+        .status-label.on{color:#22c55e}.status-label.off{color:#ef4444}.status-label.loading{color:#f59e0b}
+        .error-bar{display:none;align-items:center;gap:6px;padding:6px 12px;background:rgba(239,68,68,.08);color:#f87171;font-size:.75rem}
+        .error-bar.active{display:flex}
+        .error-close{margin-left:auto;background:none;border:none;color:#f87171;cursor:pointer}
+
+        /* ===== AUTO SOUND OVERLAY ===== */
+        #soundOverlay{
+            position:absolute;inset:0;background:rgba(0,0,0,0.5);
+            display:none;align-items:center;justify-content:center;z-index:20;
+            cursor:pointer;backdrop-filter:blur(4px);
+            flex-direction:column;gap:10px;
+        }
+        #soundOverlay.active{display:flex}
+        #soundOverlay .sound-icon{font-size:3rem;color:#fff;animation:pulse-icon 1.8s ease-in-out infinite}
+        #soundOverlay .sound-text{color:#fff;font-size:.85rem;font-weight:600;background:rgba(0,0,0,.5);padding:8px 24px;border-radius:30px;border:1px solid rgba(255,255,255,.15)}
+        @keyframes pulse-icon{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1}}
+
         /* ===== Filter & Grid ===== */
         .filter-bar{display:flex;gap:6px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius);margin:14px 0 10px;border:1px solid var(--border-color);flex-wrap:wrap;align-items:center}
         .filter-input{flex:1;min-width:80px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border-color);border-radius:16px;color:var(--text);font-size:.75rem;outline:none}
@@ -228,6 +228,57 @@
         </div>
     </header>
 
+    <!-- ===== LANGUAGES (Player-ന് മുകളിൽ) ===== -->
+    <section class="tv-section">
+        <div class="tv-section-header">
+            <div class="tv-section-title"><div class="accent-line"></div><h2><i class="fas fa-language"></i> Languages</h2></div>
+            <span class="tv-section-more">8 Languages</span>
+        </div>
+
+        <!-- MALAYALAM DROPDOWN -->
+        <div class="malayalam-dropdown-wrapper">
+            <button class="dropdown-toggle" id="malayalamToggle">
+                <i class="fas fa-chevron-down"></i> Malayalam Streams
+            </button>
+            <ul class="stream-dropdown-list" id="malayalamStreamList">
+                <li><a data-url="https://iptv-org.github.io/iptv/languages/mal.m3u"><i class="fas fa-play"></i> Stream 1</a></li>
+                <li><a data-url="https://m3u.ch/b2VPvT.m3u"><i class="fas fa-play"></i> Stream 2</a></li>
+            </ul>
+        </div>
+
+        <!-- Other languages in carousel -->
+        <div class="tv-carousel">
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tam.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Tamil</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/hin.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Hindi</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tel.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Telugu</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/kan.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Kannada</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/eng.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">English</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/ben.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Bengali</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/mar.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Marathi</span></div>
+        </div>
+    </section>
+
+    <!-- ===== CATEGORIES (Player-ന് മുകളിൽ) ===== -->
+    <section class="tv-section">
+        <div class="tv-section-header">
+            <div class="tv-section-title"><div class="accent-line" style="background:linear-gradient(180deg,#fd79a8,#fdcb6e);"></div><h2><i class="fas fa-th-large"></i> Categories</h2></div>
+            <span class="tv-section-more">10+ Genres</span>
+        </div>
+        <div class="tv-carousel">
+            <!-- Entertainment Category Fixed URL -->
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/general.m3u"><span class="icon-wrap"><i class="fas fa-film"></i></span><span class="label">Entertainment</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/news.m3u"><span class="icon-wrap"><i class="fas fa-newspaper"></i></span><span class="label">News</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/sports.m3u"><span class="icon-wrap"><i class="fas fa-futbol"></i></span><span class="label">Sports</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/movies.m3u"><span class="icon-wrap"><i class="fas fa-clapperboard"></i></span><span class="label">Movies</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/comedy.m3u"><span class="icon-wrap"><i class="fas fa-face-smile"></i></span><span class="label">Comedy</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/kids.m3u"><span class="icon-wrap"><i class="fas fa-child"></i></span><span class="label">Kids</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/music.m3u"><span class="icon-wrap"><i class="fas fa-music"></i></span><span class="label">Music</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/religious.m3u"><span class="icon-wrap"><i class="fas fa-pray"></i></span><span class="label">Devotional</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/series.m3u"><span class="icon-wrap"><i class="fas fa-tv"></i></span><span class="label">Series</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/education.m3u"><span class="icon-wrap"><i class="fas fa-graduation-cap"></i></span><span class="label">Education</span></div>
+        </div>
+    </section>
+
     <!-- PLAYER -->
     <div class="player-wrapper">
         <div class="player-container" id="playerContainer">
@@ -265,56 +316,6 @@
         </div>
     </div>
 
-    <!-- ===== LANGUAGES ===== -->
-    <section class="tv-section">
-        <div class="tv-section-header">
-            <div class="tv-section-title"><div class="accent-line"></div><h2><i class="fas fa-language"></i> Languages</h2></div>
-            <span class="tv-section-more">8 Languages</span>
-        </div>
-
-        <!-- MALAYALAM DROPDOWN -->
-        <div class="malayalam-dropdown-wrapper">
-            <button class="dropdown-toggle" id="malayalamToggle">
-                <i class="fas fa-chevron-down"></i> Malayalam Streams
-            </button>
-            <ul class="stream-dropdown-list" id="malayalamStreamList">
-                <li><a data-url="https://iptv-org.github.io/iptv/languages/mal.m3u"><i class="fas fa-play"></i> Stream 1</a></li>
-                <li><a data-url="https://m3u.ch/b2VPvT.m3u"><i class="fas fa-play"></i> Stream 2</a></li>
-            </ul>
-        </div>
-
-        <!-- Other languages in carousel -->
-        <div class="tv-carousel">
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tam.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Tamil</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/hin.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Hindi</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tel.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Telugu</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/kan.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Kannada</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/eng.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">English</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/ben.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Bengali</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/mar.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Marathi</span></div>
-        </div>
-    </section>
-
-    <!-- ===== CATEGORIES ===== -->
-    <section class="tv-section">
-        <div class="tv-section-header">
-            <div class="tv-section-title"><div class="accent-line" style="background:linear-gradient(180deg,#fd79a8,#fdcb6e);"></div><h2><i class="fas fa-th-large"></i> Categories</h2></div>
-            <span class="tv-section-more">10+ Genres</span>
-        </div>
-        <div class="tv-carousel">
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/news.m3u"><span class="icon-wrap"><i class="fas fa-newspaper"></i></span><span class="label">News</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/sports.m3u"><span class="icon-wrap"><i class="fas fa-futbol"></i></span><span class="label">Sports</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/movies.m3u"><span class="icon-wrap"><i class="fas fa-clapperboard"></i></span><span class="label">Movies</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/comedy.m3u"><span class="icon-wrap"><i class="fas fa-face-smile"></i></span><span class="label">Comedy</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/kids.m3u"><span class="icon-wrap"><i class="fas fa-child"></i></span><span class="label">Kids</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/music.m3u"><span class="icon-wrap"><i class="fas fa-music"></i></span><span class="label">Music</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/religious.m3u"><span class="icon-wrap"><i class="fas fa-pray"></i></span><span class="label">Devotional</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/series.m3u"><span class="icon-wrap"><i class="fas fa-tv"></i></span><span class="label">Series</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/entertainment.m3u"><span class="icon-wrap"><i class="fas fa-film"></i></span><span class="label">Entertainment</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/education.m3u"><span class="icon-wrap"><i class="fas fa-graduation-cap"></i></span><span class="label">Education</span></div>
-        </div>
-    </section>
-
     <!-- ===== RECENTLY WATCHED ===== -->
     <div id="recentSection">
         <div class="section-title">🕐 Recently Watched</div>
@@ -332,7 +333,7 @@
 
     <div style="margin-top:28px;padding-top:14px;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
         <span><i class="fas fa-crown" style="color:var(--accent);margin-right:6px;"></i>Savidya TV · IPTV</span>
-        <span>v4.4 · Logo Filtered</span>
+        <span>v4.5 · Reordered Layout</span>
     </div>
 </div>
 
@@ -492,7 +493,6 @@
             } else if (t && !t.startsWith('#') && cur.name) {
                 cur.url = t;
                 cur.id = btoa(t).slice(0, 12);
-                // ലോഗോ ഉള്ള ചാനലുകൾ മാത്രം ആഡ് ചെയ്യുന്നു
                 if (cur.logo && cur.logo.trim() !== '') {
                     result.push({...cur});
                 }
