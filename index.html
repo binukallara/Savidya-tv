@@ -37,7 +37,7 @@
         .tv-section-title h2{font-size:1.05rem;font-weight:700;color:var(--text);letter-spacing:-.3px}
         .tv-section-title h2 i{color:var(--accent);margin-right:6px}
         .tv-section-more{color:var(--text2);font-size:.7rem;font-weight:600}
-        .tv-carousel{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+        .tv-carousel{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;position:relative}
         .tv-carousel::-webkit-scrollbar{height:4px}
         .tv-carousel::-webkit-scrollbar-track{background:var(--bg3);border-radius:10px}
         .tv-carousel::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
@@ -48,83 +48,55 @@
         .tv-card .label{font-weight:600;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.2}
         .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 6px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
 
-        /* ===== MALAYALAM DROPDOWN ===== */
-        .malayalam-dropdown-wrapper {
+        /* ===== MALAYALAM STREAM POPOVER ===== */
+        .tv-card.has-popover { position: relative; }
+        .stream-popover {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            padding: 6px;
+            min-width: 130px;
+            gap: 4px;
+        }
+        .stream-popover.active {
+            display: flex;
+            animation: popFade 0.2s cubic-bezier(.4,0,.2,1);
+        }
+        .stream-option {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin: 4px 0 10px;
-            flex-wrap: wrap;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text);
+            background: var(--bg3);
+            transition: var(--transition);
+            white-space: nowrap;
         }
-        .malayalam-dropdown-wrapper .dropdown-toggle {
+        .stream-option:hover {
             background: var(--gradient);
             color: #fff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 12px rgba(108,92,231,.3);
         }
-        .malayalam-dropdown-wrapper .dropdown-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(108,92,231,.4);
+        .stream-option:hover i {
+            color: #fff;
         }
-        .malayalam-dropdown-wrapper .dropdown-toggle i {
-            transition: transform 0.3s;
-        }
-        .malayalam-dropdown-wrapper .dropdown-toggle.active i {
-            transform: rotate(180deg);
-        }
-        .stream-dropdown-list {
-            list-style: none;
-            display: none;
-            background: var(--bg2);
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            flex: 1;
-            min-width: 180px;
-        }
-        .stream-dropdown-list.active {
-            display: block;
-            animation: dropFade 0.2s ease;
-        }
-        .stream-dropdown-list li {
-            border-bottom: 1px solid var(--border-color);
-        }
-        .stream-dropdown-list li:last-child {
-            border-bottom: none;
-        }
-        .stream-dropdown-list a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .stream-dropdown-list a:hover {
-            background: var(--bg3);
-            padding-left: 22px;
-        }
-        .stream-dropdown-list a i {
+        .stream-option i {
             color: var(--accent);
-            width: 18px;
+            font-size: 0.85rem;
         }
-        @keyframes dropFade {
-            0% { opacity:0; transform:translateY(-8px) scale(.95); }
-            100% { opacity:1; transform:translateY(0) scale(1); }
+        @keyframes popFade {
+            0% { opacity:0; transform:translateX(-50%) translateY(-6px) scale(.95); }
+            100% { opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
         }
 
         /* ----- Player ----- */
@@ -205,7 +177,7 @@
         #recentSection{display:none;margin-top:8px}
 
         /* Responsive */
-        @media(max-width:600px){.tv-card{flex:0 0 90px;min-height:80px;padding:12px 4px}.tv-card .icon-wrap{font-size:1.4rem}.tv-card .label{font-size:.65rem}.tv-section-title h2{font-size:1rem}#channelGrid,#recent-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}.header-actions .btn{font-size:.6rem;padding:2px 8px}.country-picker{min-width:80px;font-size:.6rem}.malayalam-dropdown-wrapper{flex-direction:column;align-items:stretch}.stream-dropdown-list{min-width:unset}}
+        @media(max-width:600px){.tv-card{flex:0 0 90px;min-height:80px;padding:12px 4px}.tv-card .icon-wrap{font-size:1.4rem}.tv-card .label{font-size:.65rem}.tv-section-title h2{font-size:1rem}#channelGrid,#recent-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}.header-actions .btn{font-size:.6rem;padding:2px 8px}.country-picker{min-width:80px;font-size:.6rem}}
         @media(max-width:400px){.app{padding:6px}.tv-card{flex:0 0 76px}.tv-card .icon-wrap{font-size:1.2rem}.tv-card .label{font-size:.55rem}#channelGrid,#recent-grid{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}}
     </style>
 </head>
@@ -228,26 +200,32 @@
         </div>
     </header>
 
-    <!-- ===== LANGUAGES (Player-ന് മുകളിൽ) ===== -->
+    <!-- ===== LANGUAGES ===== -->
     <section class="tv-section">
         <div class="tv-section-header">
             <div class="tv-section-title"><div class="accent-line"></div><h2><i class="fas fa-language"></i> Languages</h2></div>
             <span class="tv-section-more">8 Languages</span>
         </div>
 
-        <!-- MALAYALAM DROPDOWN -->
-        <div class="malayalam-dropdown-wrapper">
-            <button class="dropdown-toggle" id="malayalamToggle">
-                <i class="fas fa-chevron-down"></i> Malayalam Streams
-            </button>
-            <ul class="stream-dropdown-list" id="malayalamStreamList">
-                <li><a data-url="https://iptv-org.github.io/iptv/languages/mal.m3u"><i class="fas fa-play"></i> Stream 1</a></li>
-                <li><a data-url="https://m3u.ch/b2VPvT.m3u"><i class="fas fa-play"></i> Stream 2</a></li>
-            </ul>
-        </div>
-
-        <!-- Other languages in carousel -->
         <div class="tv-carousel">
+            <!-- MALAYALAM CARD (Same style as other cards) -->
+            <div class="tv-card has-popover" id="malayalamCard">
+                <span class="icon-wrap"><i class="fas fa-globe"></i></span>
+                <span class="label">Malayalam</span>
+                <span class="live-tag">LIVE</span>
+
+                <!-- STREAM POPUP MENU -->
+                <div class="stream-popover" id="malayalamPopover">
+                    <div class="stream-option" data-url="https://iptv-org.github.io/iptv/languages/mal.m3u">
+                        <i class="fas fa-play-circle"></i> Stream 1
+                    </div>
+                    <div class="stream-option" data-url="https://m3u.ch/b2VPvT.m3u">
+                        <i class="fas fa-play-circle"></i> Stream 2
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other languages -->
             <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tam.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Tamil</span><span class="live-tag">LIVE</span></div>
             <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/hin.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Hindi</span><span class="live-tag">LIVE</span></div>
             <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tel.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Telugu</span></div>
@@ -258,14 +236,13 @@
         </div>
     </section>
 
-    <!-- ===== CATEGORIES (Player-ന് മുകളിൽ) ===== -->
+    <!-- ===== CATEGORIES ===== -->
     <section class="tv-section">
         <div class="tv-section-header">
             <div class="tv-section-title"><div class="accent-line" style="background:linear-gradient(180deg,#fd79a8,#fdcb6e);"></div><h2><i class="fas fa-th-large"></i> Categories</h2></div>
             <span class="tv-section-more">10+ Genres</span>
         </div>
         <div class="tv-carousel">
-            <!-- Entertainment Category Fixed URL -->
             <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/general.m3u"><span class="icon-wrap"><i class="fas fa-film"></i></span><span class="label">Entertainment</span><span class="live-tag">LIVE</span></div>
             <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/news.m3u"><span class="icon-wrap"><i class="fas fa-newspaper"></i></span><span class="label">News</span></div>
             <div class="tv-card" data-url="https://iptv-org.github.io/iptv/categories/sports.m3u"><span class="icon-wrap"><i class="fas fa-futbol"></i></span><span class="label">Sports</span><span class="live-tag">LIVE</span></div>
@@ -333,7 +310,7 @@
 
     <div style="margin-top:28px;padding-top:14px;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
         <span><i class="fas fa-crown" style="color:var(--accent);margin-right:6px;"></i>Savidya TV · IPTV</span>
-        <span>v4.5 · Reordered Layout</span>
+        <span>v4.6 · Unified Malayalam Card</span>
     </div>
 </div>
 
@@ -399,8 +376,8 @@
     const toastMsg = document.getElementById('toastMsg');
     const toastIcon = document.getElementById('toastIcon');
     const playerContainer = document.getElementById('playerContainer');
-    const malayalamToggle = document.getElementById('malayalamToggle');
-    const malayalamList = document.getElementById('malayalamStreamList');
+    const malayalamCard = document.getElementById('malayalamCard');
+    const malayalamPopover = document.getElementById('malayalamPopover');
 
     // ===== THEME =====
     function setTheme(dark) {
@@ -841,37 +818,33 @@
         }
     });
 
-    // ===== MALAYALAM DROPDOWN =====
-    if (malayalamToggle && malayalamList) {
-        malayalamToggle.addEventListener('click', function(e) {
+    // ===== MALAYALAM CARD POPOVER CLICK =====
+    if (malayalamCard && malayalamPopover) {
+        malayalamCard.addEventListener('click', function(e) {
             e.stopPropagation();
-            malayalamList.classList.toggle('active');
-            this.classList.toggle('active');
+            malayalamPopover.classList.toggle('active');
         });
 
-        document.addEventListener('click', function(e) {
-            if (!malayalamToggle.contains(e.target) && !malayalamList.contains(e.target)) {
-                malayalamList.classList.remove('active');
-                malayalamToggle.classList.remove('active');
-            }
-        });
-
-        malayalamList.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
+        malayalamPopover.querySelectorAll('.stream-option').forEach(opt => {
+            opt.addEventListener('click', function(e) {
                 e.stopPropagation();
+                malayalamPopover.classList.remove('active');
                 const url = this.dataset.url;
+                const label = 'Malayalam ' + this.textContent.trim();
                 if (url) {
-                    malayalamList.classList.remove('active');
-                    malayalamToggle.classList.remove('active');
-                    const label = this.textContent.trim();
                     fetchChannelsFromUrl(url, label);
                 }
             });
         });
+
+        document.addEventListener('click', function(e) {
+            if (!malayalamCard.contains(e.target)) {
+                malayalamPopover.classList.remove('active');
+            }
+        });
     }
 
-    // ===== CAROUSEL CARDS =====
+    // ===== OTHER CAROUSEL CARDS =====
     document.querySelectorAll('.tv-card[data-url]').forEach(card => {
         card.addEventListener('click', function() {
             const url = this.dataset.url;
