@@ -37,7 +37,7 @@
         .tv-section-title h2{font-size:1.05rem;font-weight:700;color:var(--text);letter-spacing:-.3px}
         .tv-section-title h2 i{color:var(--accent);margin-right:6px}
         .tv-section-more{color:var(--text2);font-size:.7rem;font-weight:600}
-        .tv-carousel{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;position:relative}
+        .tv-carousel{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
         .tv-carousel::-webkit-scrollbar{height:4px}
         .tv-carousel::-webkit-scrollbar-track{background:var(--bg3);border-radius:10px}
         .tv-carousel::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
@@ -48,56 +48,32 @@
         .tv-card .label{font-weight:600;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.2}
         .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 6px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
 
-        /* ===== MALAYALAM STREAM POPOVER ===== */
-        .tv-card.has-popover { position: relative; }
-        .stream-popover {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg2);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 100;
-            display: none;
-            flex-direction: column;
-            padding: 6px;
-            min-width: 130px;
-            gap: 4px;
+        /* ===== STREAM SELECTOR MODAL ===== */
+        .stream-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; backdrop-filter: blur(4px);
         }
-        .stream-popover.active {
-            display: flex;
-            animation: popFade 0.2s cubic-bezier(.4,0,.2,1);
+        .stream-modal-overlay.active { display: flex; animation: fadeIn 0.2s ease; }
+        .stream-modal-content {
+            background: var(--bg2); border-radius: 16px; border: 1px solid var(--border-color);
+            padding: 18px; width: 90%; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .stream-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text);
-            background: var(--bg3);
-            transition: var(--transition);
-            white-space: nowrap;
+        .stream-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .stream-modal-header h3 { font-size: 1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+        .modal-close { background: none; border: none; font-size: 1.4rem; color: var(--text2); cursor: pointer; }
+        .stream-modal-body { display: flex; flex-direction: column; gap: 10px; }
+        .stream-modal-btn {
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+            background: var(--bg3); border: 1px solid var(--border-color); border-radius: 12px;
+            color: var(--text); cursor: pointer; text-align: left; transition: var(--transition);
         }
-        .stream-option:hover {
-            background: var(--gradient);
-            color: #fff;
-        }
-        .stream-option:hover i {
-            color: #fff;
-        }
-        .stream-option i {
-            color: var(--accent);
-            font-size: 0.85rem;
-        }
-        @keyframes popFade {
-            0% { opacity:0; transform:translateX(-50%) translateY(-6px) scale(.95); }
-            100% { opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
-        }
+        .stream-modal-btn:hover { background: var(--gradient); color: #fff; }
+        .stream-modal-btn:hover i { color: #fff; }
+        .stream-modal-btn i { font-size: 1.4rem; color: var(--accent); }
+        .stream-modal-btn strong { display: block; font-size: 0.85rem; }
+        .stream-modal-btn span { font-size: 0.65rem; opacity: 0.8; }
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
         /* ----- Player ----- */
         .player-wrapper{background:var(--bg2);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;border:1px solid var(--border-color);position:relative}
@@ -208,21 +184,11 @@
         </div>
 
         <div class="tv-carousel">
-            <!-- MALAYALAM CARD (Same style as other cards) -->
-            <div class="tv-card has-popover" id="malayalamCard">
+            <!-- MALAYALAM CARD -->
+            <div class="tv-card" id="malayalamCard">
                 <span class="icon-wrap"><i class="fas fa-globe"></i></span>
                 <span class="label">Malayalam</span>
                 <span class="live-tag">LIVE</span>
-
-                <!-- STREAM POPUP MENU -->
-                <div class="stream-popover" id="malayalamPopover">
-                    <div class="stream-option" data-url="https://iptv-org.github.io/iptv/languages/mal.m3u">
-                        <i class="fas fa-play-circle"></i> Stream 1
-                    </div>
-                    <div class="stream-option" data-url="https://m3u.ch/b2VPvT.m3u">
-                        <i class="fas fa-play-circle"></i> Stream 2
-                    </div>
-                </div>
             </div>
 
             <!-- Other languages -->
@@ -310,7 +276,33 @@
 
     <div style="margin-top:28px;padding-top:14px;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
         <span><i class="fas fa-crown" style="color:var(--accent);margin-right:6px;"></i>Savidya TV · IPTV</span>
-        <span>v4.6 · Unified Malayalam Card</span>
+        <span>v4.7 · Modal Stream Selector</span>
+    </div>
+</div>
+
+<!-- MALAYALAM STREAM SELECTOR MODAL -->
+<div class="stream-modal-overlay" id="streamModal">
+    <div class="stream-modal-content">
+        <div class="stream-modal-header">
+            <h3><i class="fas fa-globe" style="color:var(--accent)"></i> Malayalam Streams</h3>
+            <button class="modal-close" id="closeModal">&times;</button>
+        </div>
+        <div class="stream-modal-body">
+            <button class="stream-modal-btn" data-url="https://iptv-org.github.io/iptv/languages/mal.m3u">
+                <i class="fas fa-play-circle"></i>
+                <div>
+                    <strong>Stream 1</strong>
+                    <span>Official IPTV Playlist</span>
+                </div>
+            </button>
+            <button class="stream-modal-btn" data-url="https://m3u.ch/b2VPvT.m3u">
+                <i class="fas fa-play-circle"></i>
+                <div>
+                    <strong>Stream 2</strong>
+                    <span>Backup Stream Server</span>
+                </div>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -377,7 +369,8 @@
     const toastIcon = document.getElementById('toastIcon');
     const playerContainer = document.getElementById('playerContainer');
     const malayalamCard = document.getElementById('malayalamCard');
-    const malayalamPopover = document.getElementById('malayalamPopover');
+    const streamModal = document.getElementById('streamModal');
+    const closeModal = document.getElementById('closeModal');
 
     // ===== THEME =====
     function setTheme(dark) {
@@ -818,29 +811,32 @@
         }
     });
 
-    // ===== MALAYALAM CARD POPOVER CLICK =====
-    if (malayalamCard && malayalamPopover) {
+    // ===== MALAYALAM MODAL CLICK HANDLER =====
+    if (malayalamCard && streamModal) {
         malayalamCard.addEventListener('click', function(e) {
             e.stopPropagation();
-            malayalamPopover.classList.toggle('active');
+            streamModal.classList.add('active');
         });
 
-        malayalamPopover.querySelectorAll('.stream-option').forEach(opt => {
-            opt.addEventListener('click', function(e) {
-                e.stopPropagation();
-                malayalamPopover.classList.remove('active');
+        closeModal.addEventListener('click', function() {
+            streamModal.classList.remove('active');
+        });
+
+        streamModal.addEventListener('click', function(e) {
+            if (e.target === streamModal) {
+                streamModal.classList.remove('active');
+            }
+        });
+
+        streamModal.querySelectorAll('.stream-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                streamModal.classList.remove('active');
                 const url = this.dataset.url;
-                const label = 'Malayalam ' + this.textContent.trim();
+                const streamName = this.querySelector('strong').textContent;
                 if (url) {
-                    fetchChannelsFromUrl(url, label);
+                    fetchChannelsFromUrl(url, 'Malayalam ' + streamName);
                 }
             });
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!malayalamCard.contains(e.target)) {
-                malayalamPopover.classList.remove('active');
-            }
         });
     }
 
