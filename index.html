@@ -5,31 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Savidya TV · IPTV Player</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
     <style>
-        /* ===== Base CSS (Light + Dark) - same as before ===== */
+        /* ===== Base CSS (Light + Dark) ===== */
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f8f9fc;--bg4:#e8ecf1;--text:#1a1a2e;--text2:#555577;--text3:#8888aa;--accent:#6c5ce7;--gradient:linear-gradient(135deg,#6c5ce7,#a29bfe);--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.06);--transition:all .2s cubic-bezier(.4,0,.2,1)}
-        body.dark-mode{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--bg4:#222233;--text:#f0f0f5;--text2:#8888aa;--text3:#555577;--shadow:0 4px 24px rgba(0,0,0,.6)}
+        :root{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f8f9fc;--bg4:#e8ecf1;--text:#1a1a2e;--text2:#555577;--text3:#8888aa;--accent:#6c5ce7;--gradient:linear-gradient(135deg,#6c5ce7,#a29bfe);--radius:12px;--shadow:0 4px 24px rgba(0,0,0,.06);--transition:all .2s cubic-bezier(.4,0,.2,1);--border-color:rgba(128,128,128,.12)}
+        body.dark-mode{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--bg4:#222233;--text:#f0f0f5;--text2:#8888aa;--text3:#555577;--shadow:0 4px 24px rgba(0,0,0,.6);--border-color:rgba(255,255,255,.08)}
         body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden;transition:background .3s}
         ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
         .app{max-width:1300px;margin:0 auto;padding:10px 14px}
         
         /* ----- Header ----- */
-        .header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 16px;background:var(--bg2);border-radius:var(--radius);margin-bottom:14px;border:1px solid rgba(128,128,128,.08)}
+        .header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 16px;background:var(--bg2);border-radius:var(--radius);margin-bottom:14px;border:1px solid var(--border-color)}
         .brand{display:flex;align-items:center;gap:10px}
         .brand-icon{width:32px;height:32px;background:var(--gradient);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
         .brand-name{font-size:1.1rem;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .brand-badge{background:var(--bg3);padding:2px 8px;border-radius:12px;font-size:.5rem;font-weight:700;color:var(--text2);border:1px solid rgba(128,128,128,.08)}
+        .brand-badge{background:var(--bg3);padding:2px 8px;border-radius:12px;font-size:.5rem;font-weight:700;color:var(--text2);border:1px solid var(--border-color)}
         .header-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-        .btn{background:var(--bg3);border:1px solid rgba(128,128,128,.08);color:var(--text2);padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:4px}
+        .btn{background:var(--bg3);border:1px solid var(--border-color);color:var(--text2);padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:4px}
         .btn:hover{background:var(--bg4);color:var(--text)}
         .btn-primary{background:var(--gradient);border-color:transparent;color:#fff}
-        .country-picker{background:var(--bg3);border:1px solid rgba(128,128,128,.08);color:var(--text);padding:4px 28px 4px 12px;border-radius:20px;font-size:.7rem;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%238888aa'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;min-width:110px}
-        .quality-picker{background:var(--bg3);border:1px solid rgba(128,128,128,.08);color:var(--text);padding:4px 12px;border-radius:20px;font-size:.7rem;outline:none;cursor:pointer;display:none}
+        .country-picker{background:var(--bg3);border:1px solid var(--border-color);color:var(--text);padding:4px 28px 4px 12px;border-radius:20px;font-size:.7rem;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%238888aa'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;min-width:110px}
+        .quality-picker{background:var(--bg3);border:1px solid var(--border-color);color:var(--text);padding:4px 12px;border-radius:20px;font-size:.7rem;outline:none;cursor:pointer;display:none}
 
         /* ----- Player ----- */
-        .player-wrapper{background:var(--bg2);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;border:1px solid rgba(128,128,128,.08);position:relative}
+        .player-wrapper{background:var(--bg2);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;border:1px solid var(--border-color);position:relative}
         .player-container{position:relative;background:#000;aspect-ratio:16/9;max-height:65vh;contain:content}
         #player-video{width:100%;height:100%;display:block;background:#000}
         .player-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10}
@@ -53,12 +54,12 @@
         .vol-wrap{display:flex;align-items:center;gap:6px}
         .vol-slider{width:40px;height:3px;-webkit-appearance:none;background:rgba(255,255,255,.18);border-radius:2px;outline:none;cursor:pointer}
         .vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:#fff;cursor:pointer}
-        .player-meta{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border-top:1px solid rgba(128,128,128,.06);flex-wrap:wrap;gap:6px}
+        .player-meta{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border-top:1px solid var(--border-color);flex-wrap:wrap;gap:6px}
         .meta-left{display:flex;align-items:center;gap:10px;min-width:0}
-        .meta-logo{width:32px;height:32px;border-radius:50%;border:1px solid rgba(128,128,128,.08);object-fit:cover;background:var(--bg3)}
+        .meta-logo{width:32px;height:32px;border-radius:50%;border:1px solid var(--border-color);object-fit:cover;background:var(--bg3)}
         .meta-name{font-weight:600;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .meta-cat{font-size:.55rem;color:var(--text2)}
-        .meta-status{display:flex;align-items:center;gap:4px;padding:2px 10px;border-radius:12px;background:var(--bg3);border:1px solid rgba(128,128,128,.06)}
+        .meta-status{display:flex;align-items:center;gap:4px;padding:2px 10px;border-radius:12px;background:var(--bg3);border:1px solid var(--border-color)}
         .live-badge{width:6px;height:6px;border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite}
         .live-badge.on{background:#22c55e}.live-badge.off{background:#ef4444;animation:none}.live-badge.loading{background:#f59e0b}
         @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
@@ -81,30 +82,30 @@
         @keyframes pulse-icon{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.1);opacity:1}}
 
         /* ===== CAROUSEL & SECTION ===== */
-        .tv-section{margin-top:28px}
-        .tv-section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+        .tv-section{margin-top:20px}
+        .tv-section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
         .tv-section-title{display:flex;align-items:center;gap:10px}
-        .tv-section-title .accent-line{width:4px;height:28px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#fd79a8);box-shadow:0 0 20px rgba(108,92,231,.15)}
-        .tv-section-title h2{font-size:1.2rem;font-weight:700;color:var(--text);letter-spacing:-.3px}
+        .tv-section-title .accent-line{width:4px;height:24px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#fd79a8);box-shadow:0 0 20px rgba(108,92,231,.15)}
+        .tv-section-title h2{font-size:1.1rem;font-weight:700;color:var(--text);letter-spacing:-.3px}
         .tv-section-title h2 i{color:var(--accent);margin-right:6px}
         .tv-section-more{color:var(--text2);font-size:.7rem;font-weight:600}
-        .tv-carousel{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 16px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+        .tv-carousel{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 12px 2px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
         .tv-carousel::-webkit-scrollbar{height:4px}
         .tv-carousel::-webkit-scrollbar-track{background:var(--bg3);border-radius:10px}
         .tv-carousel::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
-        .tv-card{flex:0 0 120px;scroll-snap-align:start;background:var(--bg2);border-radius:var(--radius);padding:18px 8px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;border:1px solid rgba(128,128,128,.08);box-shadow:var(--shadow);transition:all var(--transition);min-height:100px;position:relative;cursor:pointer}
-        .tv-card:hover{transform:translateY(-4px) scale(1.02);background:var(--bg3);border-color:var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.06)}
-        .tv-card .icon-wrap{font-size:1.8rem;color:var(--accent);transition:transform var(--transition)}
+        .tv-card{flex:0 0 110px;scroll-snap-align:start;background:var(--bg2);border-radius:var(--radius);padding:14px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-decoration:none;border:1px solid var(--border-color);box-shadow:var(--shadow);transition:all var(--transition);min-height:90px;position:relative;cursor:pointer}
+        .tv-card:hover{transform:translateY(-3px) scale(1.02);background:var(--bg3);border-color:var(--accent);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+        .tv-card .icon-wrap{font-size:1.6rem;color:var(--accent);transition:transform var(--transition)}
         .tv-card:hover .icon-wrap{transform:scale(1.1) rotate(-4deg)}
         .tv-card .label{font-weight:600;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.2}
-        .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 8px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
+        .tv-card .live-tag{position:absolute;top:6px;right:6px;background:#e84118;color:#fff;font-size:.45rem;font-weight:700;padding:1px 6px;border-radius:12px;box-shadow:0 0 12px rgba(232,65,24,.3)}
 
-        /* ===== SPECIAL MALAYALAM DROPDOWN (outside carousel) ===== */
+        /* ===== MALAYALAM DROPDOWN ===== */
         .malayalam-dropdown-wrapper {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin: 8px 0 4px;
+            margin: 6px 0 12px;
             flex-wrap: wrap;
         }
         .malayalam-dropdown-wrapper .dropdown-toggle {
@@ -179,13 +180,13 @@
         }
 
         /* ===== Filter & Grid ===== */
-        .filter-bar{display:flex;gap:6px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius);margin:14px 0 10px;border:1px solid rgba(128,128,128,.08);flex-wrap:wrap;align-items:center}
-        .filter-input{flex:1;min-width:80px;padding:5px 12px;background:var(--bg3);border:1px solid rgba(128,128,128,.08);border-radius:16px;color:var(--text);font-size:.75rem;outline:none}
-        .filter-select{padding:5px 12px;background:var(--bg3);border:1px solid rgba(128,128,128,.08);border-radius:16px;color:var(--text);font-size:.75rem;outline:none;cursor:pointer;min-width:80px}
-        .count-badge{background:var(--bg3);padding:2px 12px;border-radius:12px;font-size:.6rem;color:var(--text2);border:1px solid rgba(128,128,128,.08);margin-left:auto}
+        .filter-bar{display:flex;gap:6px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius);margin:14px 0 10px;border:1px solid var(--border-color);flex-wrap:wrap;align-items:center}
+        .filter-input{flex:1;min-width:80px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border-color);border-radius:16px;color:var(--text);font-size:.75rem;outline:none}
+        .filter-select{padding:6px 12px;background:var(--bg3);border:1px solid var(--border-color);border-radius:16px;color:var(--text);font-size:.75rem;outline:none;cursor:pointer;min-width:80px}
+        .count-badge{background:var(--bg3);padding:2px 12px;border-radius:12px;font-size:.6rem;color:var(--text2);border:1px solid var(--border-color);margin-left:auto}
         .section-title{font-size:.8rem;font-weight:600;margin:4px 0 8px;color:var(--text2);letter-spacing:.5px;text-transform:uppercase}
         #channelGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;padding:2px 0 12px}
-        .chan-card{background:var(--bg2);border:1px solid rgba(128,128,128,.08);border-radius:var(--radius);padding:10px 6px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;contain:content}
+        .chan-card{background:var(--bg2);border:1px solid var(--border-color);border-radius:var(--radius);padding:10px 6px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;contain:content}
         .chan-card:hover{transform:translateY(-2px);background:var(--bg3)} .chan-card.active{border-color:var(--accent);background:var(--bg3)}
         .chan-card img{width:44px;height:44px;object-fit:contain;margin-bottom:4px;border-radius:6px;background:var(--bg3);padding:3px}
         .chan-name{font-size:.65rem;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -196,9 +197,8 @@
         .chan-url{position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.5);border:none;color:rgba(255,255,255,.4);padding:1px 6px;border-radius:8px;font-size:.45rem;cursor:pointer;opacity:0}
         .chan-card:hover .chan-url{opacity:1}
         .empty-state{grid-column:1/-1;text-align:center;padding:30px 20px;color:var(--text2);font-size:.85rem}
-        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--bg2);border:1px solid rgba(128,128,128,.08);color:var(--text);padding:8px 18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:9999;opacity:0;transition:all .3s ease;pointer-events:none;font-size:.8rem;display:flex;align-items:center;gap:6px}
+        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--bg2);border:1px solid var(--border-color);color:var(--text);padding:8px 18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:9999;opacity:0;transition:all .3s ease;pointer-events:none;font-size:.8rem;display:flex;align-items:center;gap:6px}
         .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-        .icon-play,.icon-pause,.icon-vol,.icon-mute,.icon-fs{pointer-events:none}
 
         /* ----- Recently Watched ----- */
         #recent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:16px}
@@ -265,40 +265,37 @@
         </div>
     </div>
 
-    <!-- ===== LANGUAGE & CATEGORY CAROUSELS ===== -->
+    <!-- ===== LANGUAGES ===== -->
     <section class="tv-section">
         <div class="tv-section-header">
             <div class="tv-section-title"><div class="accent-line"></div><h2><i class="fas fa-language"></i> Languages</h2></div>
             <span class="tv-section-more">8 Languages</span>
         </div>
-        <div class="tv-carousel">
-            <!-- Malayalam is now outside carousel as a special dropdown, but we still show the other languages in carousel -->
-            <!-- We'll place Malayalam dropdown right after the carousel header -->
-        </div>
-        <!-- MALAYALAM DROPDOWN (outside carousel) -->
+
+        <!-- MALAYALAM DROPDOWN -->
         <div class="malayalam-dropdown-wrapper">
             <button class="dropdown-toggle" id="malayalamToggle">
-                <i class="fas fa-chevron-down"></i> Malayalam
+                <i class="fas fa-chevron-down"></i> Malayalam Streams
             </button>
             <ul class="stream-dropdown-list" id="malayalamStreamList">
-                <li><a data-url="https://mal2026.pages.dev/mlforapp.m3u"><i class="fas fa-play"></i> Stream 1</a></li>
-                <li><a data-url="https://iptv-org.github.io/iptv/languages/mal.m3u"><i class="fas fa-play"></i> Stream 2</a></li>
-                <li><a data-url="https://m3u.ch/b2VPvT.m3u"><i class="fas fa-play"></i> Stream 3</a></li>
-                <li><a data-url="https://raw.githubusercontent.com/djanshu/helperzplaylist/refs/heads/main/playlist"><i class="fas fa-play"></i> Stream 4</a></li>
+                <li><a data-url="https://iptv-org.github.io/iptv/languages/mal.m3u"><i class="fas fa-play"></i> Stream 1</a></li>
+                <li><a data-url="https://m3u.ch/b2VPvT.m3u"><i class="fas fa-play"></i> Stream 2</a></li>
             </ul>
         </div>
+
         <!-- Other languages in carousel -->
-        <div class="tv-carousel" style="margin-top:8px;">
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tam.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Tamil</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/hin.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Hindi</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tel.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Telugu</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/kan.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Kannada</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/eng.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">English</span><span class="live-tag">LIVE</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/ben.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Bengali</span></div>
-            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/mar.m3u"><span class="icon-wrap"><i class="fas fa-chevron-circle-down"></i></span><span class="label">Marathi</span></div>
+        <div class="tv-carousel">
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tam.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Tamil</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/hin.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Hindi</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/tel.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Telugu</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/kan.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Kannada</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/eng.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">English</span><span class="live-tag">LIVE</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/ben.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Bengali</span></div>
+            <div class="tv-card" data-url="https://iptv-org.github.io/iptv/languages/mar.m3u"><span class="icon-wrap"><i class="fas fa-globe"></i></span><span class="label">Marathi</span></div>
         </div>
     </section>
 
+    <!-- ===== CATEGORIES ===== -->
     <section class="tv-section">
         <div class="tv-section-header">
             <div class="tv-section-title"><div class="accent-line" style="background:linear-gradient(180deg,#fd79a8,#fdcb6e);"></div><h2><i class="fas fa-th-large"></i> Categories</h2></div>
@@ -320,7 +317,7 @@
 
     <!-- ===== RECENTLY WATCHED ===== -->
     <div id="recentSection">
-        <div class="section-header"><div class="section-title">🕐 Recently Watched</div></div>
+        <div class="section-title">🕐 Recently Watched</div>
         <div id="recent-grid"></div>
     </div>
 
@@ -333,21 +330,19 @@
     <div class="section-title">📡 Live Channels</div>
     <div id="channelGrid"><div class="empty-state">⏳ Loading...</div></div>
 
-    <div style="margin-top:28px;padding-top:14px;border-top:1px solid rgba(128,128,128,.08);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
+    <div style="margin-top:28px;padding-top:14px;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.65rem;color:var(--text2);">
         <span><i class="fas fa-crown" style="color:var(--accent);margin-right:6px;"></i>Savidya TV · IPTV</span>
-        <span>v4.2 · Malayalam Fixed</span>
+        <span>v4.4 · Logo Filtered</span>
     </div>
 </div>
 
 <div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg">Done</span></div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 <script>
 (function(){
     'use strict';
 
-    // ===== COUNTRY LIST (for country picker) =====
+    // ===== COUNTRY LIST =====
     const COUNTRIES = [
         {code:'in',name:'India',flag:'🇮🇳'},{code:'us',name:'United States',flag:'🇺🇸'},{code:'gb',name:'United Kingdom',flag:'🇬🇧'},{code:'ca',name:'Canada',flag:'🇨🇦'},{code:'au',name:'Australia',flag:'🇦🇺'},{code:'de',name:'Germany',flag:'🇩🇪'},{code:'fr',name:'France',flag:'🇫🇷'},{code:'it',name:'Italy',flag:'🇮🇹'},{code:'es',name:'Spain',flag:'🇪🇸'},{code:'pt',name:'Portugal',flag:'🇵🇹'},{code:'nl',name:'Netherlands',flag:'🇳🇱'},{code:'be',name:'Belgium',flag:'🇧🇪'},{code:'ch',name:'Switzerland',flag:'🇨🇭'},{code:'at',name:'Austria',flag:'🇦🇹'},{code:'se',name:'Sweden',flag:'🇸🇪'},{code:'no',name:'Norway',flag:'🇳🇴'},{code:'dk',name:'Denmark',flag:'🇩🇰'},{code:'fi',name:'Finland',flag:'🇫🇮'},{code:'pl',name:'Poland',flag:'🇵🇱'},{code:'cz',name:'Czechia',flag:'🇨🇿'},{code:'gr',name:'Greece',flag:'🇬🇷'},{code:'tr',name:'Turkey',flag:'🇹🇷'},{code:'ru',name:'Russia',flag:'🇷🇺'},{code:'ua',name:'Ukraine',flag:'🇺🇦'},{code:'ae',name:'UAE',flag:'🇦🇪'},{code:'sa',name:'Saudi Arabia',flag:'🇸🇦'},{code:'eg',name:'Egypt',flag:'🇪🇬'},{code:'za',name:'South Africa',flag:'🇿🇦'},{code:'ng',name:'Nigeria',flag:'🇳🇬'},{code:'ke',name:'Kenya',flag:'🇰🇪'},{code:'pk',name:'Pakistan',flag:'🇵🇰'},{code:'bd',name:'Bangladesh',flag:'🇧🇩'},{code:'lk',name:'Sri Lanka',flag:'🇱🇰'},{code:'np',name:'Nepal',flag:'🇳🇵'},{code:'my',name:'Malaysia',flag:'🇲🇾'},{code:'sg',name:'Singapore',flag:'🇸🇬'},{code:'id',name:'Indonesia',flag:'🇮🇩'},{code:'ph',name:'Philippines',flag:'🇵🇭'},{code:'vn',name:'Vietnam',flag:'🇻🇳'},{code:'th',name:'Thailand',flag:'🇹🇭'},{code:'jp',name:'Japan',flag:'🇯🇵'},{code:'kr',name:'South Korea',flag:'🇰🇷'},{code:'cn',name:'China',flag:'🇨🇳'},{code:'tw',name:'Taiwan',flag:'🇹🇼'},{code:'hk',name:'Hong Kong',flag:'🇭🇰'},{code:'ar',name:'Argentina',flag:'🇦🇷'},{code:'br',name:'Brazil',flag:'🇧🇷'},{code:'cl',name:'Chile',flag:'🇨🇱'},{code:'co',name:'Colombia',flag:'🇨🇴'},{code:'mx',name:'Mexico',flag:'🇲🇽'},{code:'pe',name:'Peru',flag:'🇵🇪'},{code:'int',name:'International',flag:'🌍'}
     ];
@@ -385,8 +380,6 @@
     const progressFill = document.getElementById('progressFill');
     const progressBuffer = document.getElementById('progressBuffer');
     const muteBtn = document.getElementById('muteBtn');
-    const volIcon = document.getElementById('volIcon');
-    const muteIcon = document.getElementById('muteIcon');
     const volSlider = document.getElementById('volSlider');
     const fsBtn = document.getElementById('fsBtn');
     const pipBtn = document.getElementById('pipBtn');
@@ -405,7 +398,6 @@
     const toastMsg = document.getElementById('toastMsg');
     const toastIcon = document.getElementById('toastIcon');
     const playerContainer = document.getElementById('playerContainer');
-    // Malayalam elements
     const malayalamToggle = document.getElementById('malayalamToggle');
     const malayalamList = document.getElementById('malayalamStreamList');
 
@@ -480,11 +472,8 @@
         }
     }
     fsBtn.onclick = toggleFullscreen;
-    document.addEventListener('fullscreenchange', () => {
-        document.querySelector('.player-wrapper').classList.toggle('fullscreen', !!document.fullscreenElement);
-    });
 
-    // ===== PARSER =====
+    // ===== M3U PARSER (Logo Required) =====
     function parseM3U(text) {
         const lines = text.split('\n');
         const result = [];
@@ -496,14 +485,15 @@
                 const logo = t.match(/tvg-logo="([^"]*)"/i);
                 const cat = t.match(/group-title="([^"]*)"/i);
                 cur = {
-                    name: name ? name[1].trim() : 'Unknown',
+                    name: name ? name[1].trim() : 'Unknown Channel',
                     logo: logo ? logo[1] : '',
                     category: cat ? cat[1] : 'General'
                 };
             } else if (t && !t.startsWith('#') && cur.name) {
                 cur.url = t;
                 cur.id = btoa(t).slice(0, 12);
-                if (cur.logo && cur.logo !== '') {
+                // ലോഗോ ഉള്ള ചാനലുകൾ മാത്രം ആഡ് ചെയ്യുന്നു
+                if (cur.logo && cur.logo.trim() !== '') {
                     result.push({...cur});
                 }
                 cur = {};
@@ -512,7 +502,7 @@
         return result;
     }
 
-    // ===== FETCH CHANNELS (from URL) =====
+    // ===== FETCH CHANNELS =====
     async function fetchChannelsFromUrl(url, label = '') {
         grid.innerHTML = `<div class="empty-state"><div>⏳</div><div>Loading ${label || 'channels'}...</div></div>`;
         try {
@@ -531,14 +521,13 @@
             const parsed = parseM3U(data);
             if (parsed.length > 0) {
                 channels = parsed;
-                const count = channels.length;
-                showToast(`✅ ${count} channels loaded`, '🌍');
+                showToast(`✅ ${channels.length} channels loaded`, '🌍');
                 buildCategories();
                 renderGrid();
                 if (channels.length > 0) playChannel(channels[0], false);
                 return true;
             } else {
-                throw new Error('No channels found');
+                throw new Error('No channels with logos found');
             }
         } catch (e) {
             grid.innerHTML = `<div class="empty-state"><div>❌</div><div>Failed to load ${label || 'channels'}</div></div>`;
@@ -624,7 +613,6 @@
                     if (retryAttempts < MAX_RETRIES) {
                         retryAttempts++;
                         setStatus('loading', `RETRY ${retryAttempts}`);
-                        showToast(`🔄 Retry ${retryAttempts}/${MAX_RETRIES}`, '🔄');
                         setTimeout(() => hlsPlayer?.startLoad(), 1500);
                     } else {
                         setStatus('off', 'OFFLINE');
@@ -663,7 +651,7 @@
         countBadge.textContent = filtered.length + ' channels';
         grid.innerHTML = '';
         if (filtered.length === 0) {
-            grid.innerHTML = `<div class="empty-state"><div>📭</div><div>No channels</div></div>`;
+            grid.innerHTML = `<div class="empty-state"><div>📭</div><div>No channels found</div></div>`;
             return;
         }
         const frag = document.createDocumentFragment();
@@ -777,11 +765,10 @@
     video.onplaying = function() {
         if (soundEnabled) {
             soundOverlay.classList.remove('active');
-            setStatus('on', 'LIVE');
         } else {
             soundOverlay.classList.add('active');
-            setStatus('on', 'LIVE');
         }
+        setStatus('on', 'LIVE');
     };
 
     video.ontimeupdate = function() {
@@ -811,10 +798,7 @@
     muteBtn.onclick = function() {
         video.muted = !video.muted;
         muteBtn.textContent = video.muted ? '🔇' : '🔊';
-        if (!video.muted) {
-            volSlider.value = video.volume || 1;
-            if (soundEnabled) soundOverlay.classList.remove('active');
-        }
+        if (!video.muted && soundEnabled) soundOverlay.classList.remove('active');
     };
 
     qualityPicker.onchange = function() {
@@ -857,7 +841,7 @@
         }
     });
 
-    // ===== MALAYALAM DROPDOWN (NEW - outside carousel) =====
+    // ===== MALAYALAM DROPDOWN =====
     if (malayalamToggle && malayalamList) {
         malayalamToggle.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -865,7 +849,6 @@
             this.classList.toggle('active');
         });
 
-        // Close when clicking outside
         document.addEventListener('click', function(e) {
             if (!malayalamToggle.contains(e.target) && !malayalamList.contains(e.target)) {
                 malayalamList.classList.remove('active');
@@ -873,7 +856,6 @@
             }
         });
 
-        // Stream items - load playlist
         malayalamList.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -889,7 +871,7 @@
         });
     }
 
-    // ===== CAROUSEL CARDS - Direct Load =====
+    // ===== CAROUSEL CARDS =====
     document.querySelectorAll('.tv-card[data-url]').forEach(card => {
         card.addEventListener('click', function() {
             const url = this.dataset.url;
@@ -927,6 +909,3 @@
 </script>
 </body>
 </html>
-
-ഈ കോഡ് എങ്ങനെയുണ്ട്?.
-എന്തെങ്കിലും മാറ്റം വരുത്തേണ്ടത് ഉണ്ടോ
