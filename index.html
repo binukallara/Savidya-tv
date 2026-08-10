@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Savidya TV">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='50' fill='%236c5ce7'/%3E%3Ctext x='256' y='340' font-family='sans-serif' font-size='250' text-anchor='middle' fill='white'%3EST%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/binukallara/Savidya-tv/refs/heads/main/socialbu-resized-192x192.png">
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,7 +28,7 @@
         /* ----- Header ----- */
         .header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 16px;background:var(--bg2);border-radius:var(--radius);margin-bottom:14px;border:1px solid var(--border-color)}
         .brand{display:flex;align-items:center;gap:10px}
-        .brand-icon{width:32px;height:32px;background:var(--gradient);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+        .brand-logo-img{width:34px;height:34px;border-radius:8px;object-fit:cover}
         .brand-name{font-size:1.1rem;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .brand-badge{background:var(--bg3);padding:2px 8px;border-radius:12px;font-size:.5rem;font-weight:700;color:var(--text2);border:1px solid var(--border-color)}
         .header-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
@@ -197,7 +197,7 @@
         .ios-popup-content { padding: 18px; position: relative; }
         .ios-close-btn { position: absolute; top: 8px; right: 12px; background: none; border: none; color: var(--text2); font-size: 24px; cursor: pointer; line-height: 1; }
         .ios-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .ios-app-icon { font-size: 20px; background: var(--gradient); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; flex-shrink: 0; color: #fff; }
+        .ios-app-icon { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
         .ios-header h3 { margin: 0; font-size: 14px; color: var(--text); font-weight: 600; }
         .ios-header p { margin: 2px 0 0; font-size: 11px; color: var(--text2); }
         .ios-steps { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.5; color: var(--text); }
@@ -215,13 +215,13 @@
     <!-- HEADER -->
     <header class="header">
         <div class="brand">
-            <div class="brand-icon">📺</div>
+            <img src="https://raw.githubusercontent.com/binukallara/Savidya-tv/refs/heads/main/socialbu-resized-192x192.png" alt="Savidya TV Logo" class="brand-logo-img">
             <span class="brand-name">Savidya TV</span>
             <span class="brand-badge">LIVE</span>
         </div>
         <div class="header-actions">
-            <!-- PWA INSTALL BUTTON -->
-            <button class="btn btn-primary" id="pwaInstallBtn" style="display:none;"><i class="fas fa-download"></i> Install</button>
+            <!-- PWA INSTALL BUTTON (TEXT CHANGED TO INSTALL APP) -->
+            <button class="btn btn-primary" id="pwaInstallBtn" style="display:none;"><i class="fas fa-download"></i> Install App</button>
             <select class="country-picker" id="countryPicker"></select>
             <select class="quality-picker" id="qualityPicker"><option value="-1">Auto</option></select>
             <button class="btn btn-primary" id="viewFavBtn">❤️ Fav</button>
@@ -366,7 +366,7 @@
   <div class="ios-popup-content">
     <button class="ios-close-btn" id="closeIosPopup">&times;</button>
     <div class="ios-header">
-      <div class="ios-app-icon">📺</div>
+      <img src="https://raw.githubusercontent.com/binukallara/Savidya-tv/refs/heads/main/socialbu-resized-192x192.png" alt="Savidya TV" class="ios-app-icon">
       <div>
         <h3>Savidya TV ആപ്പായി ഫോണിൽ ഇൻസ്റ്റാൾ ചെയ്യാം</h3>
         <p>Safari ബ്രൗസറിൽ താഴെ പറയുന്നവ ചെയ്യുക:</p>
