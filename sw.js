@@ -1,4 +1,4 @@
-const CACHE_NAME = 'savidya-tv-v3';
+const CACHE_NAME = 'savidya-tv-v4';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -7,41 +7,43 @@ const ASSETS_TO_CACHE = [
 ];
 
 // Install Event
-self.addEventListener('install', function(e) {
+self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(ASSETS_TO_CACHE).catch(function() { /* ignore */ });
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
     })
   );
   self.skipWaiting();
 });
 
-// Activate Event (പഴയ ക്യാഷുകൾ നീക്കം ചെയ്യുന്നു)
-self.addEventListener('activate', function(e) {
+// Activate Event (پഴയ ക്യാഷ് ഡിലീറ്റ് ചെയ്യുന്നു)
+self.addEventListener('activate', (e) => {
   e.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map(function(cache) {
+        cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            return caches.delete(cache); // വേഷൻ മാറമ്പോൾ പഴയ ക്യാഷ് കളയും
+            return caches.delete(cache);
           }
         })
       );
-    }).then(function() {
-      return self.clients.claim();
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
 // Fetch Event
-self.addEventListener('fetch', function(e) {
+self.addEventListener('fetch', (e) => {
+  // IPTV Stream വീഡിയോ റെക്വസ്റ്റുകൾ ക്യാഷ് ചെയ്യാതിരിക്കാൻ
+  if (e.request.url.includes('.m3u') || e.request.url.includes('.m3u8') || e.request.url.includes('.ts')) {
+    return;
+  }
+
   e.respondWith(
-    caches.match(e.request).then(function(resp) {
-      return resp || fetch(e.request).catch(function() {
-        return new Response('Offline – please check your connection.', {
-          status: 503,
-          statusText: 'Service Unavailable'
-        });
+    caches.match(e.request).then((response) => {
+      return response || fetch(e.request).catch(() => {
+        if (e.request.mode === 'navigate') {
+          return caches.match('/index.html');
+        }
       });
     })
   );
