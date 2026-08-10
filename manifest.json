@@ -1,12 +1,12 @@
 {
-  "name": "Savidya TV",
-  "short_name": "Savidya",
-  "description": "IPTV Home Page for Savidya TV Channels",
+  "name": "Savidya TV · IPTV Player",
+  "short_name": "Savidya TV",
+  "description": "Live IPTV Player for Savidya TV Channels",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0a1a1a",
+  "background_color": "#0a0a0f",
   "theme_color": "#6c5ce7",
   "icons": [
     {
