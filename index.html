@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Savidya TV · IPTV Player</title>
+    
+    <!-- PWA Settings & Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6c5ce7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Savidya TV">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='50' fill='%236c5ce7'/%3E%3Ctext x='256' y='340' font-family='sans-serif' font-size='250' text-anchor='middle' fill='white'%3EST%3C/text%3E%3C/svg%3E">
+
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
@@ -175,6 +184,26 @@
         #recent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:16px}
         #recentSection{display:none;margin-top:8px}
 
+        /* ===== iOS INSTALL POPUP STYLES ===== */
+        .ios-popup {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 380px; background: var(--bg2); color: var(--text);
+            border-radius: 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent); z-index: 9999;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            animation: slideUp 0.4s ease-out; display: none;
+        }
+        @keyframes slideUp { from { transform: translate(-50%, 100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+        .ios-popup-content { padding: 18px; position: relative; }
+        .ios-close-btn { position: absolute; top: 8px; right: 12px; background: none; border: none; color: var(--text2); font-size: 24px; cursor: pointer; line-height: 1; }
+        .ios-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .ios-app-icon { font-size: 20px; background: var(--gradient); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; flex-shrink: 0; color: #fff; }
+        .ios-header h3 { margin: 0; font-size: 14px; color: var(--text); font-weight: 600; }
+        .ios-header p { margin: 2px 0 0; font-size: 11px; color: var(--text2); }
+        .ios-steps { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.5; color: var(--text); }
+        .ios-steps li { margin-bottom: 6px; }
+        .ios-icon-badge { display: inline-block; font-weight: bold; font-size: 13px; background: var(--bg3); border: 1px solid var(--border-color); padding: 0 5px; border-radius: 4px; }
+
         /* Responsive */
         @media(max-width:600px){.tv-card{flex:0 0 90px;min-height:80px;padding:12px 4px}.tv-card .icon-wrap{font-size:1.4rem}.tv-card .label{font-size:.65rem}.tv-section-title h2{font-size:1rem}#channelGrid,#recent-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}.header-actions .btn{font-size:.6rem;padding:2px 8px}.country-picker{min-width:80px;font-size:.6rem}.app-footer{flex-direction:column;align-items:center;text-align:center}}
         @media(max-width:400px){.app{padding:6px}.tv-card{flex:0 0 76px}.tv-card .icon-wrap{font-size:1.2rem}.tv-card .label{font-size:.55rem}#channelGrid,#recent-grid{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}}
@@ -191,6 +220,8 @@
             <span class="brand-badge">LIVE</span>
         </div>
         <div class="header-actions">
+            <!-- PWA INSTALL BUTTON -->
+            <button class="btn btn-primary" id="pwaInstallBtn" style="display:none;"><i class="fas fa-download"></i> Install</button>
             <select class="country-picker" id="countryPicker"></select>
             <select class="quality-picker" id="qualityPicker"><option value="-1">Auto</option></select>
             <button class="btn btn-primary" id="viewFavBtn">❤️ Fav</button>
@@ -330,11 +361,102 @@
     </div>
 </div>
 
+<!-- iOS PWA INSTALL POPUP -->
+<div id="iosInstallPopup" class="ios-popup">
+  <div class="ios-popup-content">
+    <button class="ios-close-btn" id="closeIosPopup">&times;</button>
+    <div class="ios-header">
+      <div class="ios-app-icon">📺</div>
+      <div>
+        <h3>Savidya TV ആപ്പായി ഫോണിൽ ഇൻസ്റ്റാൾ ചെയ്യാം</h3>
+        <p>Safari ബ്രൗസറിൽ താഴെ പറയുന്നവ ചെയ്യുക:</p>
+      </div>
+    </div>
+    <ol class="ios-steps">
+      <li>
+        Safari ബ്രൗസറിന്റെ താഴെയുള്ള <strong>Share</strong> ബട്ടൺ <span class="ios-icon-badge">⎋</span> അമർത്തുക.
+      </li>
+      <li>
+        ഓപ്ഷനുകളിൽ നിന്ന് <strong>'Add to Home Screen'</strong> എന്നത് തിരഞ്ഞെടുക്കുക.
+      </li>
+      <li>
+        മുകളിൽ വലതുവശത്തുള്ള <strong>Add</strong> ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.
+      </li>
+    </ol>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg">Done</span></div>
 
 <script>
 (function(){
     'use strict';
+
+    // ===== SERVICE WORKER REGISTRATION =====
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registered:', reg.scope))
+                .catch(err => console.log('SW registration failed:', err));
+        });
+    }
+
+    // ===== PWA INSTALL PROMPT LOGIC =====
+    let deferredPrompt;
+    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (pwaInstallBtn) pwaInstallBtn.style.display = 'flex';
+    });
+
+    if (pwaInstallBtn) {
+        pwaInstallBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                pwaInstallBtn.style.display = 'none';
+            }
+            deferredPrompt = null;
+        });
+    }
+
+    window.addEventListener('appinstalled', () => {
+        if (pwaInstallBtn) pwaInstallBtn.style.display = 'none';
+    });
+
+    // ===== iOS PWA DETECT & POPUP =====
+    function isIOS() {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test(userAgent) || 
+               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    function isInStandaloneMode() {
+        return ('standalone' in window.navigator && window.navigator.standalone) || 
+               window.matchMedia('(display-mode: standalone)').matches;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const iosPopup = document.getElementById('iosInstallPopup');
+        const closeIosPopup = document.getElementById('closeIosPopup');
+        const isDismissed = localStorage.getItem('iosPwaPromptDismissed');
+
+        if (isIOS() && !isInStandaloneMode() && !isDismissed) {
+            setTimeout(() => {
+                if (iosPopup) iosPopup.style.display = 'block';
+            }, 3000);
+        }
+
+        if (closeIosPopup) {
+            closeIosPopup.addEventListener('click', () => {
+                if (iosPopup) iosPopup.style.display = 'none';
+                localStorage.setItem('iosPwaPromptDismissed', 'true');
+            });
+        }
+    });
 
     // ===== COUNTRY LIST =====
     const COUNTRIES = [
