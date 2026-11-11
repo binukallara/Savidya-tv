@@ -1,0 +1,258 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build-apk.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      # ഒരേ signing key വീണ്ടും ഉപയോഗിക്കാൻ (അപ്ഡേറ്റ് ഇൻസ്റ്റാൾ ചെയ്യാൻ)
+      - uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: savidya-tv-keystore-v1
+
+      - name: Install ImageMagick
+        run: sudo apt-get install -y imagemagick > /dev/null
+
+      - name: Generate Android project
+        run: |
+          mkdir -p androidapp/app/src/main/java/info/savidya/tv
+          mkdir -p androidapp/app/src/main/res/mipmap-xxxhdpi
+          mkdir -p androidapp/app/src/main/res/drawable
+          cd androidapp
+
+          cat > settings.gradle <<'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          rootProject.name = 'SavidyaTV'
+          include ':app'
+          EOF
+
+          cat > build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.5.2' apply false
+          }
+          EOF
+
+          cat > gradle.properties <<'EOF'
+          org.gradle.jvmargs=-Xmx3g
+          android.nonTransitiveRClass=true
+          EOF
+
+          cat > app/build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application'
+          }
+          android {
+              namespace 'info.savidya.tv'
+              compileSdk 34
+              defaultConfig {
+                  applicationId 'info.savidya.tv'
+                  minSdk 21
+                  targetSdk 34
+                  versionCode 1
+                  versionName '1.0'
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+          }
+          EOF
+
+          cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+              <uses-feature android:name="android.software.leanback" android:required="false" />
+              <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+              <application
+                  android:label="Savidya TV"
+                  android:icon="@mipmap/ic_launcher"
+                  android:banner="@drawable/banner"
+                  android:usesCleartextTraffic="true"
+                  android:hardwareAccelerated="true"
+                  android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true"
+                      android:configChanges="orientation|screenSize|keyboardHidden|keyboard|navigation|smallestScreenSize|screenLayout|uiMode">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          cat > app/src/main/java/info/savidya/tv/MainActivity.java <<'EOF'
+          package info.savidya.tv;
+
+          import android.app.Activity;
+          import android.app.UiModeManager;
+          import android.content.Intent;
+          import android.content.res.Configuration;
+          import android.net.Uri;
+          import android.os.Bundle;
+          import android.view.KeyEvent;
+          import android.view.View;
+          import android.view.WindowManager;
+          import android.webkit.WebChromeClient;
+          import android.webkit.WebResourceRequest;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import android.widget.FrameLayout;
+
+          public class MainActivity extends Activity {
+              static final String SITE = "https://tv.savidya.info/";
+              WebView web;
+              FrameLayout root;
+              View customView;
+              WebChromeClient.CustomViewCallback customCb;
+
+              @Override
+              protected void onCreate(Bundle b) {
+                  super.onCreate(b);
+                  getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                  root = new FrameLayout(this);
+                  web = new WebView(this);
+                  web.setBackgroundColor(0xFF0A0A0F);
+                  root.addView(web, new FrameLayout.LayoutParams(-1, -1));
+                  setContentView(root);
+
+                  WebSettings s = web.getSettings();
+                  s.setJavaScriptEnabled(true);
+                  s.setDomStorageEnabled(true);
+                  s.setMediaPlaybackRequiresUserGesture(false);
+                  s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+                  UiModeManager um = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+                  boolean tv = um != null && um.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
+                  if (tv) s.setUserAgentString(s.getUserAgentString() + " Android TV");
+
+                  web.setWebViewClient(new WebViewClient() {
+                      @Override
+                      public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
+                          Uri u = r.getUrl();
+                          if ("tv.savidya.info".equals(u.getHost())) return false;
+                          try { startActivity(new Intent(Intent.ACTION_VIEW, u)); } catch (Exception e) { }
+                          return true;
+                      }
+                  });
+
+                  web.setWebChromeClient(new WebChromeClient() {
+                      @Override
+                      public void onShowCustomView(View v, CustomViewCallback cb) {
+                          if (customView != null) { cb.onCustomViewHidden(); return; }
+                          customView = v;
+                          customCb = cb;
+                          root.addView(v, new FrameLayout.LayoutParams(-1, -1));
+                          web.setVisibility(View.GONE);
+                          v.requestFocus();
+                      }
+
+                      @Override
+                      public void onHideCustomView() {
+                          if (customView == null) return;
+                          root.removeView(customView);
+                          customView = null;
+                          web.setVisibility(View.VISIBLE);
+                          web.requestFocus();
+                          if (customCb != null) customCb.onCustomViewHidden();
+                      }
+                  });
+
+                  web.loadUrl(SITE);
+              }
+
+              void send(String key, int code) {
+                  web.evaluateJavascript("(document.activeElement||document.body).dispatchEvent(new KeyboardEvent('keydown',{key:'" + key + "',keyCode:" + code + ",bubbles:true,cancelable:true}))", null);
+              }
+
+              @Override
+              public boolean onKeyDown(int k, KeyEvent e) {
+                  switch (k) {
+                      case KeyEvent.KEYCODE_CHANNEL_UP: send("ChannelUp", 427); return true;
+                      case KeyEvent.KEYCODE_CHANNEL_DOWN: send("ChannelDown", 428); return true;
+                      case KeyEvent.KEYCODE_PROG_RED: send("ColorF0Red", 403); return true;
+                      case KeyEvent.KEYCODE_PROG_GREEN: send("ColorF1Green", 404); return true;
+                      case KeyEvent.KEYCODE_PROG_YELLOW: send("ColorF2Yellow", 405); return true;
+                      case KeyEvent.KEYCODE_PROG_BLUE: send("ColorF3Blue", 406); return true;
+                  }
+                  return super.onKeyDown(k, e);
+              }
+
+              @Override
+              public void onBackPressed() {
+                  if (customView != null) { web.getWebChromeClient().onHideCustomView(); return; }
+                  String js = "(function(){var m=document.getElementById('streamModal');"
+                      + "if(m&&m.classList.contains('active')){document.getElementById('closeModal').click();return 1}"
+                      + "var p=document.getElementById('playerContainer');"
+                      + "if(p&&document.activeElement!==p){p.focus();p.scrollIntoView({behavior:'smooth',block:'center'});return 1}"
+                      + "return 0})()";
+                  web.evaluateJavascript(js, v -> { if (!"1".equals(v)) finish(); });
+              }
+
+              @Override
+              protected void onDestroy() {
+                  if (web != null) web.destroy();
+                  super.onDestroy();
+              }
+          }
+          EOF
+
+          # ഐക്കണും TV ബാനറും (റിപ്പോയിലെ png ഫയലുകളിൽ നിന്ന്)
+          cp ../socialbu-resized-192x192.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          convert -size 320x180 xc:'#12121a' \( ../socialbu-resized-512x512.png -resize 130x130 \) -gravity center -composite app/src/main/res/drawable/banner.png
+
+      - name: Build APK
+        working-directory: androidapp
+        run: gradle assembleDebug --no-daemon
+
+      - name: Collect APK
+        run: cp androidapp/app/build/outputs/apk/debug/app-debug.apk SavidyaTV.apk
+
+      - name: Publish release with APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: Savidya TV APK ${{ github.run_number }}
+          files: SavidyaTV.apk
