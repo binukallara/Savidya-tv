@@ -1,9 +1,9 @@
-const CACHE_NAME = 'savidya-tv-v4';
+const CACHE_NAME = 'savidya-tv-v5';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/sw.js'
+  '/tv.js',
+  '/manifest.json'
 ];
 
 // Install Event
@@ -16,7 +16,7 @@ self.addEventListener('install', (e) => {
   self.skipWaiting();
 });
 
-// Activate Event (پഴയ ക്യാഷ് ഡിലീറ്റ് ചെയ്യുന്നു)
+// Activate Event (പഴയ ക്യാഷ് ഡിലീറ്റ് ചെയ്യുന്നു)
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -31,20 +31,29 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Fetch Event
+// Fetch Event: ആദ്യം നെറ്റ്‌വർക്ക്, ഇല്ലെങ്കിൽ ക്യാഷ്
 self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  const url = req.url;
+
   // IPTV Stream വീഡിയോ റെക്വസ്റ്റുകൾ ക്യാഷ് ചെയ്യാതിരിക്കാൻ
-  if (e.request.url.includes('.m3u') || e.request.url.includes('.m3u8') || e.request.url.includes('.ts')) {
-    return;
-  }
+  if (url.includes('.m3u') || url.includes('.m3u8') || url.includes('.ts')) return;
+
+  // നമ്മുടെ സ്വന്തം ഫയലുകൾ മാത്രം
+  if (req.method !== 'GET' || new URL(url).origin !== self.location.origin) return;
 
   e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request).catch(() => {
-        if (e.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
-      });
-    })
+    fetch(req)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+        return res;
+      })
+      .catch(() =>
+        caches.match(req, { ignoreSearch: true }).then((hit) => {
+          if (hit) return hit;
+          if (req.mode === 'navigate') return caches.match('/index.html');
+        })
+      )
   );
 });
