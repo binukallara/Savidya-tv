@@ -757,7 +757,12 @@
         addToRecents(ch);
         updateActive();
     }
-
+    function updateActive(){
+        channelGrid.querySelectorAll('.chan-card.active').forEach(c=>c.classList.remove('active'));
+        const a = currentChannel && channelGrid.querySelector('[data-id="'+currentChannel.id+'"]');
+        if(a) a.classList.add('active');
+    }
+    
     function attemptAutoplay(){
         video.muted = true;
         const playPromise = video.play();
