@@ -722,6 +722,7 @@
         metaCat.textContent = ch.category;
         metaLogo.src = ch.logo || 'https://via.placeholder.com/32/6c5ce7/fff?text=TV';
         
+        errorBar.classList.remove('active');
         setStatus('LOADING','loading');
         playerOverlay.classList.add('active');
         overlayText.textContent = 'Connecting...';
@@ -732,10 +733,26 @@
             if(wrapper) wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
+        // പഴയ സ്ട്രീം പൂർണ്ണമായി നിർത്തി മെമ്മറി ക്ലിയർ ചെയ്യുന്നു
         if(hls){ hls.destroy(); hls = null; }
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
 
         if(Hls.isSupported()){
-            hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+            hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: false,          // സാധാരണ IPTV ചാനലുകൾക്ക് ബഫറിങ് കുറയ്ക്കാൻ
+                maxBufferLength: 30,            // 30 സെക്കൻഡ് വീഡിയോ മുൻകൂട്ടി ബഫർ ചെയ്യാൻ
+                maxMaxBufferLength: 60,         // പരമാവധി ബഫർ പരിധി
+                maxBufferSize: 60 * 1000 * 1000,// 60MB ബഫർ മെമ്മറി
+                startLevel: -1,                 // ഇന്റർനെറ്റ് വേഗതയ്ക്കനുസരിച്ച് ക്വാളിറ്റി മാറാൻ
+                abrEwmaDefaultEstimate: 500000, // തുടക്കത്തിൽ തന്നെ വേഗത്തിൽ ലോഡ് ആകാൻ
+                fragLoadingTimeOut: 20000,      // സെർവർ സ്ലോ ആണെങ്കിൽ 20 സെക്കൻഡ് വരെ കാത്തിരിക്കാൻ
+                manifestLoadingTimeOut: 15000,
+                fragLoadingMaxRetry: 4,         // ചെറിയ നെറ്റ്‌വർക്ക് തടസ്സങ്ങളിൽ സ്വയം റീട്രൈ ചെയ്യാൻ
+                manifestLoadingMaxRetry: 3
+            });
             hls.loadSource(ch.url);
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, (evt, data)=>{
@@ -744,9 +761,16 @@
             });
             hls.on(Hls.Events.ERROR, (evt, data)=>{
                 if(data.fatal){
-                    if(data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-                    else if(data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
-                    else showError('Stream error. Cannot play.');
+                    if(data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+                        hls.startLoad();
+                    } else if(data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                        hls.recoverMediaError();
+                    } else {
+                        hls.destroy();
+                        playerOverlay.classList.remove('active');
+                        setStatus('OFFLINE', 'off');
+                        showError('Stream error. Cannot play.');
+                    }
                 }
             });
         } else if(video.canPlayType('application/vnd.apple.mpegurl')){
@@ -757,6 +781,7 @@
         addToRecents(ch);
         updateActive();
     }
+
     function updateActive(){
         channelGrid.querySelectorAll('.chan-card.active').forEach(c=>c.classList.remove('active'));
         const a = currentChannel && channelGrid.querySelector('[data-id="'+currentChannel.id+'"]');
@@ -811,7 +836,7 @@
     }
 
     function updateProgress(){
-        if(video.duration){
+        if(video.duration && isFinite(video.duration)){
             const pct = (video.currentTime / video.duration) * 100;
             progressFill.style.width = pct + '%';
         }
