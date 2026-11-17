@@ -742,16 +742,22 @@
         if(Hls.isSupported()){
             hls = new Hls({
                 enableWorker: true,
-                lowLatencyMode: false,          // സാധാരണ IPTV ചാനലുകൾക്ക് ബഫറിങ് കുറയ്ക്കാൻ
-                maxBufferLength: 30,            // 30 സെക്കൻഡ് വീഡിയോ മുൻകൂട്ടി ബഫർ ചെയ്യാൻ
-                maxMaxBufferLength: 60,         // പരമാവധി ബഫർ പരിധി
-                maxBufferSize: 60 * 1000 * 1000,// 60MB ബഫർ മെമ്മറി
-                startLevel: -1,                 // ഇന്റർനെറ്റ് വേഗതയ്ക്കനുസരിച്ച് ക്വാളിറ്റി മാറാൻ
-                abrEwmaDefaultEstimate: 500000, // തുടക്കത്തിൽ തന്നെ വേഗത്തിൽ ലോഡ് ആകാൻ
-                fragLoadingTimeOut: 20000,      // സെർവർ സ്ലോ ആണെങ്കിൽ 20 സെക്കൻഡ് വരെ കാത്തിരിക്കാൻ
-                manifestLoadingTimeOut: 15000,
-                fragLoadingMaxRetry: 4,         // ചെറിയ നെറ്റ്‌വർക്ക് തടസ്സങ്ങളിൽ സ്വയം റീട്രൈ ചെയ്യാൻ
-                manifestLoadingMaxRetry: 3
+                lowLatencyMode: false,              // ബഫറിങ് കുറയ്ക്കാൻ false ആക്കുക
+                maxBufferLength: 18,                // 18 സെക്കൻഡ് ബഫർ (വേഗതയ്ക്കും സ്ഥിരതയ്ക്കും നല്ലത്)
+                maxMaxBufferLength: 30,             // പരമാവധി 30 സെക്കൻഡ്
+                maxBufferSize: 25 * 1000 * 1000,    // 25MB മെമ്മറി പരിധി (Smart TV-ക്ക് സുരക്ഷിതം)
+                maxBufferHole: 0.5,                 // ചെറിയ ബഫർ വിടവുകൾ മറികടക്കാൻ
+                liveSyncDurationCount: 3,           // 3 സെഗ്മെന്റുകൾ ബഫർ ചെയ്ത് സ്ഥിരതയോടെ പ്ലേ ചെയ്യാൻ
+                liveMaxLatencyDurationCount: 8,     // പരമാവധി ലേറ്റൻസി
+                backBufferLength: 0,                // കണ്ടുകഴിഞ്ഞ ഭാഗങ്ങൾ ഉടൻ ഡിലീറ്റ് ചെയ്യാൻ (RAM സേവ്)
+                startLevel: -1,                     // ഓട്ടോ ക്വാളിറ്റി
+                abrEwmaDefaultEstimate: 300000,     // തുടക്കത്തിൽ കുറഞ്ഞ ക്വാളിറ്റിയിൽ വേഗത്തിൽ പ്ലേ തുടങ്ങാൻ
+                fragLoadingTimeOut: 15000,          // ഫ്രാഗ്മെന്റ് ലോഡിംഗ് ടൈംഔട്ട്
+                manifestLoadingTimeOut: 10000,      // മാനിഫെസ്റ്റ് ലോഡിംഗ് ടൈംഔട്ട്
+                levelLoadingTimeOut: 10000,
+                fragLoadingMaxRetry: 6,             // കൂടുതൽ റീട്രൈ (നെറ്റ്‌വർക്ക് തടസ്സങ്ങൾക്ക്)
+                manifestLoadingMaxRetry: 4,
+                levelLoadingMaxRetry: 4
             });
             hls.loadSource(ch.url);
             hls.attachMedia(video);
