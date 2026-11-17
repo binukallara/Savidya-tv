@@ -1,4 +1,4 @@
-const CACHE_NAME = 'savidya-tv-v6';
+const CACHE_NAME = 'savidya-tv-v7';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
